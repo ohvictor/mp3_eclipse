@@ -74,6 +74,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.569371657" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.include.paths.999642032" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../source"/>
+									<listOptionValue builtIn="false" value="../source/lib"/>
 									<listOptionValue builtIn="false" value="../source/controls"/>
 									<listOptionValue builtIn="false" value="../source/model"/>
 									<listOptionValue builtIn="false" value="../source/MCAL"/>
@@ -200,7 +201,7 @@
 									<listOptionValue builtIn="false" value="-print-memory-usage"/>
 									<listOptionValue builtIn="false" value="--sort-section=alignment"/>
 								</option>
-								<option id="gnu.c.link.option.userobjs.153379067" name="Other objects" superClass="gnu.c.link.option.userobjs" useByScannerDiscovery="false" valueType="userObjs"/>
+								<option id="gnu.c.link.option.userobjs.153379067" name="Other objects" superClass="gnu.c.link.option.userobjs" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.shared.693549962" name="Shared (-shared)" superClass="gnu.c.link.option.shared" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.soname.232886771" name="Shared object name (-Wl,-soname=)" superClass="gnu.c.link.option.soname" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.implname.665869694" name="Import Library name (-Wl,--out-implib=)" superClass="gnu.c.link.option.implname" useByScannerDiscovery="false"/>

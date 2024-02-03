@@ -47,10 +47,10 @@
 #define SD_RESPONSE_SHORT				2UL		// 48 bit
 #define SD_RESPONSE_SHORT_BUSY			3UL		// Short response with busy
 
-#define SDHC_RESPONSE_LENGTH_NONE	SDHC_XFERTYP_RSPTYP(0b00)
-#define SDHC_RESPONSE_LENGTH_48		SDHC_XFERTYP_RSPTYP(0b10)
-#define SDHC_RESPONSE_LENGTH_136	SDHC_XFERTYP_RSPTYP(0b01)
-#define SDHC_RESPONSE_LENGTH_48BUSY	SDHC_XFERTYP_RSPTYP(0b11)
+#define SDHC_RESPONSE_LENGTH_NONE	0UL
+#define SDHC_RESPONSE_LENGTH_48		1UL
+#define SDHC_RESPONSE_LENGTH_136	2UL
+#define SDHC_RESPONSE_LENGTH_48BUSY	3UL
 
 #define SDHC_COMMAND_CHECK_CCR		SDHC_XFERTYP_CCCEN(0b1)
 #define SDHC_COMMAND_CHECK_INDEX	SDHC_XFERTYP_CICEN(0b1)
@@ -370,7 +370,7 @@ DRESULT sd_disk_read(BYTE* dataBuffer, LBA_t startSector, UINT sectorCount) {
 
     // Check if it's a single sector read
     if (sectorCount == 1) {
-        errorStatus = SDSendCommand(CMD_READ_SINGLE_BLOCK, startSector, SD_RESPONSE_DATA_SINGLE, &response);
+        errorStatus = sd_send_cmd(CMD_READ_SINGLE_BLOCK, startSector, SD_RESPONSE_DATA_SINGLE, &response);
         if (errorStatus) {
             return RES_ERROR;  // Operation failed
         }
@@ -379,7 +379,7 @@ DRESULT sd_disk_read(BYTE* dataBuffer, LBA_t startSector, UINT sectorCount) {
     else {
         // Set up SDHC for multiple block read
         SDHC->BLKATTR = SDHC_BLKATTR_BLKCNT(sectorCount) | SDHC_BLKATTR_BLKSIZE(SD_BLKSIZE);
-        errorStatus = SDSendCommand(CMD_READ_MULTIPLE_BLOCKS, startSector, SD_RESPONSE_DATA_MULTI, &response);
+        errorStatus = sd_send_cmd(CMD_READ_MULTIPLE_BLOCKS, startSector, SD_RESPONSE_DATA_MULTI, &response);
         if (errorStatus) {
             return RES_ERROR;  // Operation failed
         }
@@ -436,7 +436,7 @@ void sd_init()
 		SDHC->IRQSTAT 	= 	0xFFFFFFFF;
 
 		// Enable requests 
-		SDHC->IRQSTATEN =  	SDHC_IRQSTAT_CRM | SDHC_IRQSTATEN_CIESEN | SDHC_IRQSTATEN_TCSEN | SDHC_IRQSTATEN_CCSEN;
+		SDHC->IRQSTATEN =  	SDHC_IRQSTAT_CRM_MASK | SDHC_IRQSTATEN_CIESEN_MASK | SDHC_IRQSTATEN_TCSEN_MASK | SDHC_IRQSTATEN_CCSEN_MASK;
 		NVIC_EnableIRQ(SDHC_IRQn);
 
 		sd_card_inserted_handler();	// Check if card is inserted
@@ -463,7 +463,6 @@ static uint32_t sd_send_cmd(uint8_t command, uint32_t argument, SDRESPONSE_TYPE 
             responseLength = SDHC_RESPONSE_LENGTH_NONE;
 			transferType |=  SDHC_XFERTYP_RSPTYP(SD_RESPONSE_NONE);
             break;
-        case SD_RESPONSE_SHORT:
         case SD_RESPONSE_R1:
         case SD_RESPONSE_R5:
         case SD_RESPONSE_R6:
@@ -527,7 +526,7 @@ static uint32_t sd_send_cmd(uint8_t command, uint32_t argument, SDRESPONSE_TYPE 
     return errorStatus;
 }
 
-static void sd_card_inserted_handler();
+static void sd_card_inserted_handler()
 {
   if (gpioRead(SD_SWITCH_PIN) == HIGH) {
 		SDState = STA_NOINIT;

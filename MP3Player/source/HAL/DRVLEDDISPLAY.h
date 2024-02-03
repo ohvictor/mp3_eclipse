@@ -9,7 +9,7 @@
 
 #include "eDMA.h"
 #include "FTM.h"
-#include"PORT.h"
+#include "PortConfig.h"
 
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))

@@ -26,8 +26,8 @@
 
 #ifdef __arm__  // for an embedded enviroment, using FatFs from chan
 
-#include "ff.h"				// FAT File System Library
-#include "diskio.h" 			// Disk IO Initialize SPI Mutex
+#include "fatfs/ff.h"				// FAT File System Library
+#include "fatfs/diskio.h" 			// Disk IO Initialize SPI Mutex
 
 #define file_seek_absolute(file,position) f_lseek(file, position)
 #define file_seek_relative(fi,pos) f_lseek(fi,fi->fptr+pos)
