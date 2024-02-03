@@ -14,4 +14,11 @@
 // Utilizamos los pines conectados a la izquierda donde se encontrarían los pines analógicos, pero dado que no los usamos están libres para usar.
 void control_init();
 
+void ctrl_set_play_callback(void (*func_callback)(void));
+void ctrl_set_pause_callback(void (*func_callback)(void));
+void ctrl_set_stop_callback(void (*func_callback)(void));
+void ctrl_set_next_callback(void (*func_callback)(void));
+void ctrl_set_prev_callback(void (*func_callback)(void));
+
+
 #endif /* CONTROLS_H_ */

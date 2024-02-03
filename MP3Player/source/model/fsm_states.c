@@ -12,6 +12,7 @@
 #define VOL_MIN 0
 
 static uint8_t volume_level = 15;
+static STATE *pState=NULL;
 
 /********************
  * STATES DEFINITION

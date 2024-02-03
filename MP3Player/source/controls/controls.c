@@ -11,72 +11,61 @@
 #include "controls.h"
 #include "gpio.h"
 #include "PortConfig.h"
-#include "evQueue.h"
 
 #include <stdio.h>
 
-pinIrqFun_t irq_ev_gen_play(void);
-pinIrqFun_t irq_ev_gen_pause(void);
-pinIrqFun_t irq_ev_gen_stop(void);
-pinIrqFun_t irq_ev_gen_next(void);
-pinIrqFun_t irq_ev_gen_prev(void);
+void (*ctrl_play_callback) (void);
+void (*ctrl_pause_callback) (void);
+void (*ctrl_stop_callback) (void);
+void (*ctrl_next_callback) (void);
+void (*ctrl_prev_callback) (void);
 
 void control_init()
 {
-  // Todos los GPIO para botones en pullup, habilitando irq en flanco negativo
-  gpioMode(PORTNUM2PIN(PB,2),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PB,2), GPIO_IRQ_MODE_FALLING_EDGE, irq_ev_gen_play))
-  {
-    printf("Play button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PB,3),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PB,3), GPIO_IRQ_MODE_FALLING_EDGE, irq_ev_gen_pause))
-  {
-    printf("Pause button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PB,10),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PB,10), GPIO_IRQ_MODE_FALLING_EDGE, irq_ev_gen_stop))
-  {
-    printf("Stop button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PC,11),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PC,11), GPIO_IRQ_MODE_FALLING_EDGE, irq_ev_gen_next))
-  {
-    printf("Next button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PC,10),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PC,10), GPIO_IRQ_MODE_FALLING_EDGE, irq_ev_gen_prev))
-  {
-    printf("Prev button event registered");
-  }
+	ctrl_play_callback = NULL;
+	ctrl_pause_callback = NULL;
+	ctrl_stop_callback = NULL;
+	ctrl_next_callback = NULL;
+	ctrl_prev_callback = NULL;
 
+	gpioMode(PIN_PLAY, INPUT);
+	gpioIRQ(PIN_PLAY, PORT_eInterruptFalling, ctrl_play_callback);
+
+	gpioMode(PIN_PAUSE, INPUT);
+	gpioIRQ(PIN_PAUSE, PORT_eInterruptFalling, ctrl_pause_callback);
+
+	gpioMode(PIN_STOP, INPUT);
+	gpioIRQ(PIN_STOP, PORT_eInterruptFalling, ctrl_stop_callback);
+
+	gpioMode(PIN_NEXT, INPUT);
+	gpioIRQ(PIN_NEXT, PORT_eInterruptFalling, ctrl_next_callback);
+
+	gpioMode(PIN_PREV, INPUT);
+	gpioIRQ(PIN_PREV, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_prev_callback);
 }
 
-pinIrqFun_t irq_ev_gen_play(void)
+
+void ctrl_set_play_callback(void (*func_callback)(void))
 {
-  evQueueAdd(EV_PLAY);
+	ctrl_play_callback = func_callback;
 }
 
-pinIrqFun_t irq_ev_gen_pause(void)
+void ctrl_set_pause_callback(void (*func_callback)(void))
 {
-  evQueueAdd(EV_PAUSE);
+	ctrl_pause_callback = func_callback;
 }
 
-pinIrqFun_t irq_ev_gen_stop(void)
+void ctrl_set_stop_callback(void (*func_callback)(void))
 {
-  evQueueAdd(EV_STOP);
+	ctrl_stop_callback = func_callback;
 }
 
-pinIrqFun_t irq_ev_gen_next(void)
+void ctrl_set_next_callback(void (*func_callback)(void))
 {
-  evQueueAdd(EV_NEXT);
+	ctrl_next_callback = func_callback;
 }
 
-pinIrqFun_t irq_ev_gen_prev(void)
+void ctrl_set_prev_callback(void (*func_callback)(void))
 {
-  evQueueAdd(EV_PREV);
+	ctrl_prev_callback = func_callback;
 }
