@@ -1,0 +1,9 @@
+../source/lib/queue/circular_queue.c:52:18:createQueue	40	static
+../source/lib/queue/circular_queue.c:69:6:isEmpty	16	static
+../source/lib/queue/circular_queue.c:79:6:isFull	16	static
+../source/lib/queue/circular_queue.c:89:6:clearQueue	16	static
+../source/lib/queue/circular_queue.c:101:8:usageQueue	16	static
+../source/lib/queue/circular_queue.c:112:6:enqueue	16	static
+../source/lib/queue/circular_queue.c:131:6:enqueueChain	32	static
+../source/lib/queue/circular_queue.c:152:7:dequeue	24	static
+../source/lib/queue/circular_queue.c:171:6:dequeueChain	40	static

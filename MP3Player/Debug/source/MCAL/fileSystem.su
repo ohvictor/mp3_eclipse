@@ -1,0 +1,11 @@
+../source/MCAL/fileSystem.c:61:6:init_filesys	8	static
+../source/MCAL/fileSystem.c:91:6:list_file	16	static
+../source/MCAL/fileSystem.c:135:6:statrt_mapping	16	static
+../source/MCAL/fileSystem.c:162:8:open_folder	4	static
+../source/MCAL/fileSystem.c:172:8:close_folder	4	static
+../source/MCAL/fileSystem.c:185:8:open_file	8	static
+../source/MCAL/fileSystem.c:201:8:get_path	4	static
+../source/MCAL/fileSystem.c:209:7:show_next	8	static
+../source/MCAL/fileSystem.c:231:7:show_prev	8	static
+../source/MCAL/fileSystem.c:260:6:map_files	112	static
+../source/MCAL/fileSystem.c:341:6:node_append	16	static

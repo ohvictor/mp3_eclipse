@@ -1,0 +1,8 @@
+../SDK/CMSIS/core_cm4.h:1677:22:__NVIC_EnableIRQ	16	static
+../source/MCAL/SD/sd_2.c:164:9:sd_disk_status	4	static
+../source/MCAL/SD/sd_2.c:168:9:sd_disk_initialize	40	static
+../source/MCAL/SD/sd_2.c:359:9:sd_disk_read	48	static
+../source/MCAL/SD/sd_2.c:411:6:sd_init	8	static
+../source/MCAL/SD/sd_2.c:455:17:sd_send_cmd	40	static
+../source/MCAL/SD/sd_2.c:529:13:sd_card_inserted_handler	8	static
+../source/MCAL/SD/sd_2.c:540:6:is_sd_card_inserted	4	static
