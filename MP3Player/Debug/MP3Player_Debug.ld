@@ -5,7 +5,7 @@
  * Generated linker script file for MK64FN1M0xxx12
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.23
- * MCUXpresso IDE v10.2.0 [Build 759] [2018-05-15]  on Feb 3, 2024 4:57:33 PM
+ * MCUXpresso IDE v10.2.0 [Build 759] [2018-05-15]  on Feb 3, 2024 6:30:26 PM
  */
 
 INCLUDE "MP3Player_Debug_library.ld"

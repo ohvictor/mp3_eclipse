@@ -27,37 +27,21 @@ void control_init()
 	ctrl_stop_callback = NULL;
 	ctrl_next_callback = NULL;
 	ctrl_prev_callback = NULL;
-	// Todos los GPIO para botones en pullup, habilitando irq en flanco negativo
-	gpioMode(PIN_PLAY,INPUT_PULLUP);
-	if(gpioIRQ(PIN_PLAY, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_play_callback))
-	{
-		//printf("Play button event registered");
-	}
 
-	gpioMode(PIN_PAUSE,INPUT_PULLUP);
-	if(gpioIRQ(PIN_PAUSE, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_pause_callback))
-	{
-		//printf("Pause button event registered");
-	}
+	gpioMode(PIN_PLAY, INPUT);
+	gpioIRQ(PIN_PLAY, PORT_eInterruptFalling, ctrl_play_callback);
 
-	gpioMode(PIN_STOP,INPUT_PULLUP);
-	if(gpioIRQ(PIN_STOP, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_stop_callback))
-	{
-		//printf("Stop button event registered");
-	}
+	gpioMode(PIN_PAUSE, INPUT);
+	gpioIRQ(PIN_PAUSE, PORT_eInterruptFalling, ctrl_pause_callback);
 
-	gpioMode(PIN_NEXT,INPUT_PULLUP);
-	if(gpioIRQ(PIN_NEXT, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_next_callback))
-	{
-		//printf("Next button event registered");
-	}
+	gpioMode(PIN_STOP, INPUT);
+	gpioIRQ(PIN_STOP, PORT_eInterruptFalling, ctrl_stop_callback);
 
-	gpioMode(PIN_PREV,INPUT_PULLUP);
-	if(gpioIRQ(PIN_PREV, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_prev_callback))
-	{
-		//printf("Prev button event registered");
-	}
+	gpioMode(PIN_NEXT, INPUT);
+	gpioIRQ(PIN_NEXT, PORT_eInterruptFalling, ctrl_next_callback);
 
+	gpioMode(PIN_PREV, INPUT);
+	gpioIRQ(PIN_PREV, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_prev_callback);
 }
 
 
