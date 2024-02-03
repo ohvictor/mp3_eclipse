@@ -141,6 +141,8 @@ static uint32_t 	sd_send_cmd(uint8_t cmd, uint32_t argument, SDRESPONSE_TYPE rsp
 
 static bool 		is_sd_card_inserted();
 
+DSTATUS sd_disk_status ();
+
 /*******************************************************************************
  * STATIC VARIABLES AND CONST VARIABLES WITH FILE LEVEL SCOPE
  ******************************************************************************/

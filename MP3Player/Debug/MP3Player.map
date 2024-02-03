@@ -746,21 +746,31 @@ Discarded input sections
  .data          0x00000000        0x0 ./source/controls/controls.o
  .bss           0x00000000        0x0 ./source/controls/controls.o
  .bss.pState    0x00000000        0x4 ./source/controls/controls.o
+ .bss.ctrl_play_callback
+                0x00000000        0x4 ./source/controls/controls.o
+ .bss.ctrl_pause_callback
+                0x00000000        0x4 ./source/controls/controls.o
+ .bss.ctrl_stop_callback
+                0x00000000        0x4 ./source/controls/controls.o
+ .bss.ctrl_next_callback
+                0x00000000        0x4 ./source/controls/controls.o
+ .bss.ctrl_prev_callback
+                0x00000000        0x4 ./source/controls/controls.o
  .rodata        0x00000000       0x9d ./source/controls/controls.o
  .text.control_init
-                0x00000000       0xc8 ./source/controls/controls.o
- .text.irq_ev_gen_play
-                0x00000000       0x10 ./source/controls/controls.o
- .text.irq_ev_gen_pause
-                0x00000000       0x10 ./source/controls/controls.o
- .text.irq_ev_gen_stop
-                0x00000000       0x10 ./source/controls/controls.o
- .text.irq_ev_gen_next
-                0x00000000       0x10 ./source/controls/controls.o
- .text.irq_ev_gen_prev
-                0x00000000       0x10 ./source/controls/controls.o
- .debug_info    0x00000000      0xa82 ./source/controls/controls.o
- .debug_abbrev  0x00000000      0x200 ./source/controls/controls.o
+                0x00000000       0xdc ./source/controls/controls.o
+ .text.ctrl_set_play_callback
+                0x00000000       0x20 ./source/controls/controls.o
+ .text.ctrl_set_pause_callback
+                0x00000000       0x20 ./source/controls/controls.o
+ .text.ctrl_set_stop_callback
+                0x00000000       0x20 ./source/controls/controls.o
+ .text.ctrl_set_next_callback
+                0x00000000       0x20 ./source/controls/controls.o
+ .text.ctrl_set_prev_callback
+                0x00000000       0x20 ./source/controls/controls.o
+ .debug_info    0x00000000      0xacd ./source/controls/controls.o
+ .debug_abbrev  0x00000000      0x220 ./source/controls/controls.o
  .debug_aranges
                 0x00000000       0x48 ./source/controls/controls.o
  .debug_ranges  0x00000000       0x38 ./source/controls/controls.o
@@ -816,9 +826,9 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./source/controls/controls.o
  .debug_macro   0x00000000       0x29 ./source/controls/controls.o
  .debug_line    0x00000000      0x4dc ./source/controls/controls.o
- .debug_str     0x00000000    0x7bd9e ./source/controls/controls.o
+ .debug_str     0x00000000    0x7bdce ./source/controls/controls.o
  .comment       0x00000000       0x7f ./source/controls/controls.o
- .debug_frame   0x00000000       0xb8 ./source/controls/controls.o
+ .debug_frame   0x00000000       0xf4 ./source/controls/controls.o
  .ARM.attributes
                 0x00000000       0x39 ./source/controls/controls.o
  .group         0x00000000        0xc ./source/MCAL/SD/sd.o
