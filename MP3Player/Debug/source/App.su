@@ -1,2 +1,3 @@
-../source/App.c:34:6:App_Init	8	static
-../source/App.c:42:6:App_Run	16	static
+../source/App.c:43:6:App_Init	16	static
+../source/App.c:50:6:loadSDWrapper	8	static
+../source/App.c:67:6:App_Run	16	static

@@ -1,18 +1,18 @@
-/*******************************************************************************
-  @file		
-  @brief	
-  @author	
-  @date		
+/***************************************************************************//**
+  @file     SD.h
+  @brief    Funciones de la SD
+  @author   Grupo 5
+  @date		25 dic. 2022
  ******************************************************************************/
-#ifndef _SD_H_
-#define _SD_H_
+
+#ifndef _SD_SD_H_
+#define _SD_SD_H_
 
 /*******************************************************************************
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
-#include "fatfs/diskio.h"
-#include "fatfs/ff.h"
+#include "lib/fatfs/diskio.h"
 #include <stdbool.h>
 
 /*******************************************************************************
@@ -24,6 +24,14 @@
 /*******************************************************************************
  * FUNCTION PROTOTYPES WITH GLOBAL SCOPE
  ******************************************************************************/
+
+// Hardware initialization. Called inside SD_disk_status if necessary.
+// @return true if error
+bool SDInit();
+
+// Return true if card is present
+// SDInit must be called before calling isSDCardInserted
+bool isSDCardInserted();
 
 DSTATUS SD_disk_status ();
 
@@ -38,4 +46,4 @@ DRESULT SD_disk_read (
 /*******************************************************************************
  ******************************************************************************/
 
-#endif // _UART_H_
+#endif // _SD_SD_H_

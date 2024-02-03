@@ -15,7 +15,7 @@
 #include "lib/fatfs/diskio.h"
 
 #include "filesystem.h"
-#include "SD/SD.h"
+#include "SD/sd.h"
 #include "node.h"
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
