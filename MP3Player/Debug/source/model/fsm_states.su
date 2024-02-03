@@ -1,0 +1,11 @@
+../source/model/fsm_states.c:61:6:FSM_start	4	static
+../source/model/fsm_states.c:67:8:FSM_getState	4	static
+../source/model/fsm_states.c:73:6:FSM_setNewState	16	static
+../source/model/fsm_states.c:85:6:music_play	4	static
+../source/model/fsm_states.c:91:6:music_stop	4	static
+../source/model/fsm_states.c:97:6:music_pause	4	static
+../source/model/fsm_states.c:103:6:music_next	8	static
+../source/model/fsm_states.c:110:6:music_prev	8	static
+../source/model/fsm_states.c:117:6:volume_increase	4	static
+../source/model/fsm_states.c:127:6:volume_decrease	4	static
+../source/model/fsm_states.c:137:6:no_action	4	static

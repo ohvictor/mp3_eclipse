@@ -1,0 +1,6 @@
+../source/controls/controls.c:24:6:control_init	8	static
+../source/controls/controls.c:59:13:irq_ev_gen_play	8	static
+../source/controls/controls.c:64:13:irq_ev_gen_pause	8	static
+../source/controls/controls.c:69:13:irq_ev_gen_stop	8	static
+../source/controls/controls.c:74:13:irq_ev_gen_next	8	static
+../source/controls/controls.c:79:13:irq_ev_gen_prev	8	static

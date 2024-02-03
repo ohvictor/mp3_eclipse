@@ -1,0 +1,10 @@
+../source/HAL/encoder.c:82:6:rotaryEncoder_init	8	static
+../source/HAL/encoder.c:109:6:rotary_Init	8	static
+../source/HAL/encoder.c:133:6:button_init	8	static
+../source/HAL/encoder.c:159:5:encoder_read	4	static
+../source/HAL/encoder.c:169:6:encoder_isr	16	static
+../source/HAL/encoder.c:197:6:button_isr	8	static
+../source/HAL/encoder.c:232:6:set_encoderCW_callback	16	static
+../source/HAL/encoder.c:242:6:set_encoderCCW_callback	16	static
+../source/HAL/encoder.c:253:6:set_button_long_callback	16	static
+../source/HAL/encoder.c:264:6:set_button_short_callback	16	static
