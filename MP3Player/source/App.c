@@ -40,13 +40,13 @@ void mp3_prev(void);
 
 void App_Init (void)
 {
-	control_init();
+
 	ctrl_set_play_callback(mp3_play);
 	ctrl_set_pause_callback(mp3_pause);
 	ctrl_set_stop_callback(mp3_stop);
 	ctrl_set_next_callback(mp3_next);
 	ctrl_set_prev_callback(mp3_prev);
-
+	control_init();
 
 	FSM_start();
 

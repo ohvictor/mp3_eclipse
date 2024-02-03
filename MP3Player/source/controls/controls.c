@@ -22,12 +22,6 @@ void (*ctrl_prev_callback) (void);
 
 void control_init()
 {
-	ctrl_play_callback = NULL;
-	ctrl_pause_callback = NULL;
-	ctrl_stop_callback = NULL;
-	ctrl_next_callback = NULL;
-	ctrl_prev_callback = NULL;
-
 	gpioMode(PIN_PLAY, INPUT);
 	gpioIRQ(PIN_PLAY, PORT_eInterruptFalling, ctrl_play_callback);
 
