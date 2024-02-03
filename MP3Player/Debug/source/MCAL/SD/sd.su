@@ -1,0 +1,7 @@
+../source/MCAL/SD/sd.c:130:6:SDInit	8	static
+../source/MCAL/SD/sd.c:160:9:SD_disk_status	4	static
+../source/MCAL/SD/sd.c:165:9:SD_disk_initialize	40	static
+../source/MCAL/SD/sd.c:301:9:SD_disk_read	48	static
+../source/MCAL/SD/sd.c:361:6:isSDCardInserted	4	static
+../source/MCAL/SD/sd.c:374:17:SDSendCmd	40	static
+../source/MCAL/SD/sd.c:460:13:cardInsertedCb	8	static
