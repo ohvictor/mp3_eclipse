@@ -1,0 +1,46 @@
+#ifndef __CHARS_H_
+#define __CHARS_H_
+
+typedef enum {
+	symClr = 0x00,
+	sym0 = 0x3F,
+	sym1 = 0x06,
+	sym2 = 0x5B,
+	sym3 = 0x4F,
+	sym4 = 0x66,
+	sym5 = 0x6D,
+	sym6 = 0x7D,
+	sym7 = 0x07,
+	sym8 = 0x7F,
+	sym9 = 0x6F,
+	symDash = 0x40,
+	symA = 0x77,
+	symB = 0x7F,
+	symb = 0x7C,
+	symC = 0x39,
+	symc = 0x5C,
+	symd,
+	symE,
+	symF,
+	symG,
+	symH,
+	symh,
+	symI,
+	symi,
+	symJ,
+	symj,
+	symL,
+	syml,
+	symn,
+	symO,
+	symo,
+	symP,
+	symr,
+	symS,
+	symt,
+	symU,
+	symu,
+	symy
+} sym_type;
+
+#endif
