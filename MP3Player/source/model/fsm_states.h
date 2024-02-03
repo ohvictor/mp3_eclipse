@@ -29,7 +29,6 @@ extern STATE stopped[];
 extern STATE playing[];
 extern STATE paused[];
 
-static STATE *pState=NULL;
 
 /*FSM INTERFACE FUNCTIONS DECLARATION */
 

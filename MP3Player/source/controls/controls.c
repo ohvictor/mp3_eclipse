@@ -11,7 +11,6 @@
 #include "controls.h"
 #include "gpio.h"
 #include "PortConfig.h"
-#include "evQueue.h"
 
 #include <stdio.h>
 
@@ -23,36 +22,41 @@ void (*ctrl_prev_callback) (void);
 
 void control_init()
 {
-  // Todos los GPIO para botones en pullup, habilitando irq en flanco negativo
-  gpioMode(PORTNUM2PIN(PB,2),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PB,2), GPIO_IRQ_MODE_FALLING_EDGE, ctrl_play_callback))
-  {
-    printf("Play button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PB,3),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PB,3), GPIO_IRQ_MODE_FALLING_EDGE, ctrl_pause_callback))
-  {
-    printf("Pause button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PB,10),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PB,10), GPIO_IRQ_MODE_FALLING_EDGE, ctrl_stop_callback))
-  {
-    printf("Stop button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PC,11),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PC,11), GPIO_IRQ_MODE_FALLING_EDGE, ctrl_next_callback))
-  {
-    printf("Next button event registered");
-  }
-  
-  gpioMode(PORTNUM2PIN(PC,10),INPUT_PULLUP);
-  if(gpioIRQ(PORTNUM2PIN(PC,10), GPIO_IRQ_MODE_FALLING_EDGE, ctrl_prev_callback))
-  {
-    printf("Prev button event registered");
-  }
+	ctrl_play_callback = NULL;
+	ctrl_pause_callback = NULL;
+	ctrl_stop_callback = NULL;
+	ctrl_next_callback = NULL;
+	ctrl_prev_callback = NULL;
+	// Todos los GPIO para botones en pullup, habilitando irq en flanco negativo
+	gpioMode(PIN_PLAY,INPUT_PULLUP);
+	if(gpioIRQ(PIN_PLAY, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_play_callback))
+	{
+		//printf("Play button event registered");
+	}
+
+	gpioMode(PIN_PAUSE,INPUT_PULLUP);
+	if(gpioIRQ(PIN_PAUSE, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_pause_callback))
+	{
+		//printf("Pause button event registered");
+	}
+
+	gpioMode(PIN_STOP,INPUT_PULLUP);
+	if(gpioIRQ(PIN_STOP, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_stop_callback))
+	{
+		//printf("Stop button event registered");
+	}
+
+	gpioMode(PIN_NEXT,INPUT_PULLUP);
+	if(gpioIRQ(PIN_NEXT, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_next_callback))
+	{
+		//printf("Next button event registered");
+	}
+
+	gpioMode(PIN_PREV,INPUT_PULLUP);
+	if(gpioIRQ(PIN_PREV, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_prev_callback))
+	{
+		//printf("Prev button event registered");
+	}
 
 }
 
