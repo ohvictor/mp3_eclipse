@@ -24,7 +24,11 @@
 /*******************************************************************************
  * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
  ******************************************************************************/
-
+void mp3_play(void);
+void mp3_pause(void);
+void mp3_stop(void);
+void mp3_next(void);
+void mp3_prev(void);
 /*******************************************************************************
  * STATIC VARIABLES AND CONST VARIABLES WITH FILE LEVEL SCOPE
  ******************************************************************************/
