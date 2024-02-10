@@ -1,0 +1,5 @@
+../source/LOGIC/audioplayer/audioplayer.c:64:6:audio_player_init	8	static
+../source/LOGIC/audioplayer/audioplayer.c:90:10:audio_player_load_song	16	static
+../source/LOGIC/audioplayer/audioplayer.c:108:10:audio_player_play	24	static
+../source/LOGIC/audioplayer/audioplayer.c:150:6:audio_player_stop	8	static
+../source/LOGIC/audioplayer/audioplayer.c:209:6:timerMP3callback	24	static

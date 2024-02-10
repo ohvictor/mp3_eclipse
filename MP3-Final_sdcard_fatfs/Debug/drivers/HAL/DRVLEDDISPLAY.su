@@ -1,0 +1,12 @@
+../drivers/HAL/DRVLEDDISPLAY.c:44:6:LED_DISPLAY_init	40	static
+../drivers/HAL/DRVLEDDISPLAY.c:166:6:LED_DISPLAY_updateMatrix	8	static
+../drivers/HAL/DRVLEDDISPLAY.c:181:9:LED_DISPLAY_getBrightness	16	static
+../drivers/HAL/DRVLEDDISPLAY.c:186:7:LED_DISPLAY_getDotColor	16	static
+../drivers/HAL/DRVLEDDISPLAY.c:193:6:LED_DISPLAY_setBrightness	16	static
+../drivers/HAL/DRVLEDDISPLAY.c:202:6:LED_DISPLAY_setDotColor	16	static
+../drivers/HAL/DRVLEDDISPLAY.c:210:13:RGB2PWMLevel	32	static
+../drivers/HAL/DRVLEDDISPLAY.c:284:13:swapWriteBuffer	4	static
+../drivers/HAL/DRVLEDDISPLAY.c:297:6:applyBrightnessSetting	24	static
+../drivers/HAL/DRVLEDDISPLAY.c:315:6:game_matrix_init	24	static
+../drivers/HAL/DRVLEDDISPLAY.c:339:6:update_game_matrix	24	static
+../drivers/HAL/DRVLEDDISPLAY.c:363:6:DMA0_IRQCallback	8	static

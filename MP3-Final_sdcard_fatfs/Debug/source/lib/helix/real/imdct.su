@@ -1,0 +1,12 @@
+../source/lib/helix/real/assembly.h:323:23:MULSHIFT32	24	static
+../source/lib/helix/real/assembly.h:330:21:FASTABS	24	static
+../source/lib/helix/real/assembly.h:341:21:CLZ	24	static
+../source/lib/helix/real/imdct.c:72:13:AntiAlias	48	static
+../source/lib/helix/real/imdct.c:132:13:WinPrevious	72	static
+../source/lib/helix/real/imdct.c:185:12:FreqInvertRescale	96	static
+../source/lib/helix/real/imdct.c:260:22:idct9	200	static
+../source/lib/helix/real/imdct.c:368:12:IMDCT36	240	static
+../source/lib/helix/real/imdct.c:471:22:imdct12	56	static
+../source/lib/helix/real/imdct.c:536:12:IMDCT12x3	200	static
+../source/lib/helix/real/imdct.c:618:12:HybridTransform	152	static
+../source/lib/helix/real/imdct.c:717:5:xmp3fixpt_IMDCT	96	static

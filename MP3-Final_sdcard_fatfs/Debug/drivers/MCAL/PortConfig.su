@@ -1,0 +1,13 @@
+C:\Users\fn_mo\Documents\MCUXpressoIDE_11.8.0_1165\workspace\MP3-Final_sdcard_fatfs\CMSIS/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static
+../drivers/MCAL/PortConfig.c:3:6:port_config_init	8	static
+../drivers/MCAL/PortConfig.c:26:6:port_config_set_pull_resistor_mode	24	static
+../drivers/MCAL/PortConfig.c:32:6:port_config_set_pull_up_mode	24	static
+../drivers/MCAL/PortConfig.c:38:6:port_config_set_open_drain_mode	24	static
+../drivers/MCAL/PortConfig.c:44:6:port_config_SetMuxMode	24	static
+../drivers/MCAL/PortConfig.c:50:6:port_config_set_interrupt_mode	24	static
+../drivers/MCAL/PortConfig.c:56:6:port_config_is_interrupt_pending	16	static
+../drivers/MCAL/PortConfig.c:61:6:port_config_clear_interrup_flag	16	static
+../drivers/MCAL/PortConfig.c:66:6:port_config_configure	24	static
+../drivers/MCAL/PortConfig.c:79:6:port_config_pcr	24	static
+../drivers/MCAL/PortConfig.c:84:13:port_config_get_port_flags	16	static
+../drivers/MCAL/PortConfig.c:89:6:port_config_clear_port_flags	16	static

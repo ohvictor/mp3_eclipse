@@ -1,0 +1,16 @@
+C:\Users\fn_mo\Documents\MCUXpressoIDE_11.8.0_1165\workspace\MP3-Final_sdcard_fatfs\drivers\fsl/fsl_sysmpu.h:268:20:SYSMPU_Enable	16	static
+../source/FSYS/filesystem/filesystem.c:87:6:filesystem_init	8	static
+../source/FSYS/filesystem/filesystem.c:147:6:filesystem_deinit	16	static
+../source/FSYS/filesystem/filesystem.c:160:6:filesystem_map_files	112	static
+../source/FSYS/filesystem/filesystem.c:170:6:filesystem_print_files	16	static
+../source/FSYS/filesystem/filesystem.c:184:8:filesystem_reset_files	16	static
+../source/FSYS/filesystem/filesystem.c:195:7:filesystem_get_file_name	528	static
+../source/FSYS/filesystem/filesystem.c:216:5:filesystem_get_files_count	4	static
+../source/FSYS/filesystem/filesystem.c:224:6:filesystem_is_MP3file	24	static
+../source/FSYS/filesystem/filesystem.c:241:8:filesystem_get_first_file	280	static
+../source/FSYS/filesystem/filesystem.c:255:8:filesystem_get_next_file	24	static
+../source/FSYS/filesystem/filesystem.c:269:8:filesystem_get_previous_file	24	static
+../source/FSYS/filesystem/filesystem.c:284:6:filesystem_add_files	24	static
+../source/FSYS/filesystem/filesystem.c:297:6:SD_callback	16	static
+../source/FSYS/filesystem/filesystem.c:315:6:filesystem_map_files_handler	32	static
+../source/FSYS/filesystem/filesystem.c:356:10:sdcardWaitCardInsert	8	static

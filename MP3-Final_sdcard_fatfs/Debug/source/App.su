@@ -1,0 +1,7 @@
+../source/App.c:47:6:App_Init	4	static
+../source/App.c:55:6:App_Run	16	static
+../source/App.c:72:6:mp3_play	8	static
+../source/App.c:77:6:mp3_pause	8	static
+../source/App.c:82:6:mp3_stop	8	static
+../source/App.c:87:6:mp3_next	8	static
+../source/App.c:92:6:mp3_prev	8	static

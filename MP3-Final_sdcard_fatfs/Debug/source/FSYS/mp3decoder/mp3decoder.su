@@ -1,0 +1,6 @@
+../source/FSYS/mp3decoder/mp3decoder.c:63:7:mp3_decoder_init	8	static
+../source/FSYS/mp3decoder/mp3decoder.c:76:7:mp3_load_song	24	static
+../source/FSYS/mp3decoder/mp3decoder.c:139:10:mp3_get_next_frame	4656	static
+../source/FSYS/mp3decoder/mp3decoder.c:220:13:convert_stereo_to_mono	24	static
+../source/FSYS/mp3decoder/mp3decoder.c:228:17:mp3_file_size	16	static
+../source/FSYS/mp3decoder/mp3decoder.c:238:13:mp3_reset_context	4	static

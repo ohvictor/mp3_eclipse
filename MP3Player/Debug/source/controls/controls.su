@@ -1,6 +1,0 @@
-../source/controls/controls.c:23:6:control_init	8	static
-../source/controls/controls.c:48:6:ctrl_set_play_callback	16	static
-../source/controls/controls.c:53:6:ctrl_set_pause_callback	16	static
-../source/controls/controls.c:58:6:ctrl_set_stop_callback	16	static
-../source/controls/controls.c:63:6:ctrl_set_next_callback	16	static
-../source/controls/controls.c:68:6:ctrl_set_prev_callback	16	static

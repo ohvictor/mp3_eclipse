@@ -1,7 +1,0 @@
-../source/MCAL/timer.c:76:6:timerInit	8	static
-../source/MCAL/timer.c:97:10:timerGetId	4	static
-../source/MCAL/timer.c:112:6:timerStart	24	static
-../source/MCAL/timer.c:134:6:timerStop	16	static
-../source/MCAL/timer.c:143:6:timerExpired	16	static
-../source/MCAL/timer.c:156:6:timerDelay	16	static
-../source/MCAL/timer.c:173:13:timer_isr	16	static

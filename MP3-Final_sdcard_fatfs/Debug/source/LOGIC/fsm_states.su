@@ -1,0 +1,11 @@
+../source/LOGIC/fsm_states.c:62:6:FSM_start	4	static
+../source/LOGIC/fsm_states.c:68:8:FSM_getState	4	static
+../source/LOGIC/fsm_states.c:74:6:FSM_setNewState	16	static
+../source/LOGIC/fsm_states.c:86:6:music_play	4	static
+../source/LOGIC/fsm_states.c:92:6:music_stop	4	static
+../source/LOGIC/fsm_states.c:98:6:music_pause	4	static
+../source/LOGIC/fsm_states.c:104:6:music_next	8	static
+../source/LOGIC/fsm_states.c:111:6:music_prev	8	static
+../source/LOGIC/fsm_states.c:118:6:volume_increase	4	static
+../source/LOGIC/fsm_states.c:128:6:volume_decrease	4	static
+../source/LOGIC/fsm_states.c:138:6:no_action	4	static

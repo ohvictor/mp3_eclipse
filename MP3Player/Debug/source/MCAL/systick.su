@@ -1,2 +1,0 @@
-../source/MCAL/systick.c:36:6:SysTick_Init	16	static
-../source/MCAL/systick.c:48:9:SysTick_Handler	16	static

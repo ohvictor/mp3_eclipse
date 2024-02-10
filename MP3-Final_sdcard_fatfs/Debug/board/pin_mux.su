@@ -1,0 +1,4 @@
+C:\Users\fn_mo\Documents\MCUXpressoIDE_11.8.0_1165\workspace\MP3-Final_sdcard_fatfs\drivers\fsl/fsl_clock.h:668:20:CLOCK_EnableClock	24	static
+C:\Users\fn_mo\Documents\MCUXpressoIDE_11.8.0_1165\workspace\MP3-Final_sdcard_fatfs\drivers\fsl/fsl_port.h:271:20:PORT_SetPinConfig	32	static
+C:\Users\fn_mo\Documents\MCUXpressoIDE_11.8.0_1165\workspace\MP3-Final_sdcard_fatfs\drivers\fsl/fsl_port.h:374:20:PORT_SetPinMux	24	static
+../board/pin_mux.c:68:6:BOARD_InitPins	40	static
