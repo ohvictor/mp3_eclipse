@@ -11,6 +11,7 @@
 #include "time.h"
 #include "controls.h"
 #include "filesystem.h"
+#include "LCD_GDM1602A.h"
 
 #include <stdio.h>
 #include <stdint.h>

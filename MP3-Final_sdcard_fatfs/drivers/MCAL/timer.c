@@ -53,6 +53,7 @@ typedef struct {
  * @brief Periodic service
  */
 static void timer_isr(void);
+int getArrayEffectiveLength();
 
 
 /*******************************************************************************
@@ -164,6 +165,24 @@ void timerDelay(ttick_t ticks)
 }
 
 
+bool timerGetStatus(int id)
+{
+	bool idFound = false;												 //Flag
+	int i = 0;															 //Index
+	int arrayEffectiveLength = getArrayEffectiveLength(); //Amount of not NULL elements in sysTickElements.
+	/*Searches for the id in the array*/
+	while ((idFound == false) && (i < arrayEffectiveLength))
+	{
+		if (timers[i].callback == id) //ID found.
+		{
+			return (timers[i].cnt == 0); //Resumes the calling of the callback.
+		}
+		i++;
+	}
+	return false;
+}
+
+
 /*******************************************************************************
  *******************************************************************************
                         LOCAL FUNCTION DEFINITIONS
@@ -197,6 +216,22 @@ static void timer_isr(void)
 			}
 		}
 	}
+}
+
+
+int getArrayEffectiveLength()
+{
+	int i = 0;				//Index
+	int j = 0;
+	bool foundLast = false; //Flag
+	while (i < timers_cant)
+	{
+		// check if timer is active
+		if (timers[i].callback != NULL && timers[i].running == 1 && timers[i].expired == 0)
+			j++;
+		i++;
+	}
+	return j;
 }
 
 

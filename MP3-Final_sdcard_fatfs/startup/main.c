@@ -15,6 +15,7 @@
 #include "time.h"
 #include "controls.h"
 #include "filesystem.h"
+#include "LCD_GDM1602A.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -29,6 +30,10 @@ int main (void)
     hw_DisableInterrupts();
     App_Init(); /* Program-specific setup */
     hw_EnableInterrupts();
+
+    LCD_Init();
+
+    LCD_writeStrInPos("DEFAULT             ", 16, 0, 0);
 
 	int result = filesystem_init();
 
