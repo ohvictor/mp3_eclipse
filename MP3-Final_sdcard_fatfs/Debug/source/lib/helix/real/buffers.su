@@ -1,3 +1,0 @@
-../source/lib/helix/real/buffers.c:65:13:ClearBuffer	24	static
-../source/lib/helix/real/buffers.c:92:13:xmp3fixpt_AllocateBuffers	40	static
-../source/lib/helix/real/buffers.c:179:6:xmp3fixpt_FreeBuffers	16	static

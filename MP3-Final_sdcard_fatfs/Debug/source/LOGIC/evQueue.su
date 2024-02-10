@@ -1,4 +1,0 @@
-../source/LOGIC/evQueue.c:37:6:evQueueAdd	16	static
-../source/LOGIC/evQueue.c:45:6:evQueueAvailable	4	static
-../source/LOGIC/evQueue.c:51:9:evQueueGetNext	16	static
-../source/LOGIC/evQueue.c:63:6:evQueueClear	16	static

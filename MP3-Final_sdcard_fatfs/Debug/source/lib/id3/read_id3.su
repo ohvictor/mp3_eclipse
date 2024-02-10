@@ -1,3 +1,0 @@
-../source/lib/id3/read_id3.c:35:15:read_ID3_info	168	static
-../source/lib/id3/read_id3.c:118:6:has_ID3_tag	32	static
-../source/lib/id3/read_id3.c:130:14:get_ID3_size	40	static

@@ -1,9 +1,0 @@
-../drivers/HAL/displayBoard.c:58:6:DispBoard_Init	8	static
-../drivers/HAL/displayBoard.c:95:6:digit_write	24	static
-../drivers/HAL/displayBoard.c:108:6:display_refresh	16	static
-../drivers/HAL/displayBoard.c:119:6:status_led_write	16	static
-../drivers/HAL/displayBoard.c:124:6:status_led_refresh	8	static
-../drivers/HAL/displayBoard.c:130:6:brightness_set	16	static
-../drivers/HAL/displayBoard.c:142:6:digit_refresh	16	static
-../drivers/HAL/displayBoard.c:150:6:digit_sel	16	static
-../drivers/HAL/displayBoard.c:156:6:digit_set	16	static
