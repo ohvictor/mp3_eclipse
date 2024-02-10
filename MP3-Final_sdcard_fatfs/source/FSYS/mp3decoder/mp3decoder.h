@@ -26,7 +26,25 @@
 
 #define INPUT_BUFFER_SIZE			MAINBUF_SIZE
 
-#define MP3_SAMPLE_RATE				44100
+#define MP3_SAMPLE_RATE				48000
+
+#define ID3_MAX_NUM_CHARS          50
+
+#define DEFAULT_ID3TAG               "Unknown"
+
+
+/*******************************************************************************
+ * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
+ ******************************************************************************/
+
+typedef struct {
+  char tag[3];
+  char title[ID3_MAX_NUM_CHARS];
+  char artist[ID3_MAX_NUM_CHARS];
+  char album[ID3_MAX_NUM_CHARS];
+  char year[4];
+  char comment[ID3_MAX_NUM_CHARS];
+} ID3Tag_t;
 
 
 /*******************************************************************************
@@ -53,6 +71,48 @@ bool  mp3_load_song(const char* filepath);
  * @return MP3FrameInfo struct with outputSamps bytes written in output buffer.
 */
 uint16_t mp3_get_next_frame(int16_t* outputBuffer);
+
+/**
+ * @brief Get MP3 file tag data.
+ */
+void mp3_get_tag_data(ID3Tag_t data);
+
+/**
+ * @brief Check if file has ID3 tag.
+ */
+bool mp3_has_tag(void);
+
+/**
+ * @brief: Get the current file title.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_title(void);
+
+
+/**
+ * @brief: Get the current file's album.
+ * @param album_: is a pointer to the char pointer (array of chars) that forms the album word.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_album(void);
+
+
+/**
+ * @brief: Get the current file's artist.
+ * @param artist_: is a pointer to the char pointer (array of chars) that forms the artist word.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_artist(void);
+
+
+/**
+ * @brief: Get the current file's year.
+ * @param year_: is a pointer to the char pointer (array of chars) that forms the year word.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_year(void);
+
+
 
 /*******************************************************************************
  ******************************************************************************/

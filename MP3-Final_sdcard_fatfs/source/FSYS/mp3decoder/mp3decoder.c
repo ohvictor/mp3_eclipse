@@ -11,13 +11,17 @@
 
 #include "Mp3decoder.h"
 #include "stdlib.h"
-#include "../../lib/helix/pub/mp3dec.h"
+#include "mp3dec.h"
+#include "read_id3.h"
 #include "ff.h"
 #include "gpio.h"
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
+
+#define TAG_SIZE 128
+
 
 /*******************************************************************************
  * VARIABLES WITH GLOBAL SCOPE
@@ -30,7 +34,7 @@ typedef struct {
  bool 				isFileOpen;
  uint16_t 			fileSize;
 
- uint8_t 			mp3FrameBuffer[INPUT_BUFFER_SIZE];
+ BYTE 				mp3FrameBuffer[INPUT_BUFFER_SIZE];
  int32_t    		mp3OutputBufferIndex;
  int32_t     		mp3InputBufferIndex;
 
@@ -40,6 +44,9 @@ typedef struct {
 
 static MP3DecoderContext_t context;
 
+static ID3Tag_t id3Tag;
+
+bool id3TagRead = false;
 
 /*******************************************************************************
  * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
@@ -48,7 +55,7 @@ static MP3DecoderContext_t context;
 static void convert_stereo_to_mono(int16_t* outputBuffer, int16_t* temporaryBuffer);
 static void mp3_reset_context();
 static uint16_t mp3_file_size();
-
+static void mp3_read_id3tag(void);
 
 /*******************************************************************************
  *******************************************************************************
@@ -67,7 +74,6 @@ bool  mp3_decoder_init(void)
     return context.mp3Decoder == NULL;
 }
 
-
 /**
  * @brief  Selects and loads the MP3 file.
  * @param  filepath: a pointer to the MP3 file path.
@@ -81,11 +87,16 @@ bool  mp3_load_song(const char* filepath)
         f_close(&context.mp3FileHandler);
     	mp3_reset_context();
     }
-    else if (f_open(&context.mp3FileHandler, _T(filepath), FA_READ) == FR_OK)
+    else if (f_open(&context.mp3FileHandler, filepath, FA_READ) == FR_OK)
     {
     	context.isFileOpen = true;
 
         context.fileSize = mp3_file_size();
+
+        context.mp3BytesLeft = context.fileSize;
+
+        // Read ID3 tag if it exits
+        mp3_read_id3tag();
 
         int error = 1, offset;
 
@@ -99,14 +110,15 @@ bool  mp3_load_song(const char* filepath)
                 offset = MP3FindSyncWord(context.mp3FrameBuffer, context.mp3BytesRead);
 
                 // If valid frame found
-                if (offset >= 0) {
-                    error = MP3GetNextFrameInfo(context.mp3FrameBuffer, &context.mp3FrameInfo, context.mp3BytesRead + offset);
+                if (offset >= 0)
+                {
+					error = MP3GetNextFrameInfo(context.mp3Decoder, &context.mp3FrameInfo, context.mp3FrameBuffer + offset);
 
-                    if (error) 
-                    {
-                        // Move file pointer next to new frame sync found
-                        f_lseek(&context.mp3FileHandler, f_tell(&context.mp3FileHandler) - context.mp3BytesRead + offset + 1);
-                    }
+					if (error)
+					{
+						// Move file pointer next to new frame sync found
+						f_lseek(&context.mp3FileHandler, f_tell(&context.mp3FileHandler) - context.mp3BytesRead + offset + 1);
+					}
                 }
             } 
             else 
@@ -170,7 +182,6 @@ uint16_t mp3_get_next_frame(int16_t* outputBuffer)
             switch (error) 
             {
                 case ERR_MP3_NONE:
-
                     MP3GetLastFrameInfo(context.mp3Decoder, &context.mp3FrameInfo);
                     f_lseek(&context.mp3FileHandler, f_tell(&context.mp3FileHandler) - context.mp3BytesLeft);
 
@@ -217,6 +228,72 @@ uint16_t mp3_get_next_frame(int16_t* outputBuffer)
 }
 
 
+
+/**
+ * @brief Get MP3 file tag data.
+ */
+void mp3_get_tag_data(ID3Tag_t data)
+{
+    data = id3Tag; // Copy
+}
+
+/**
+ * @brief Check if file has ID3 tag.
+ */
+bool mp3_has_tag(void)
+{
+    return id3TagRead;
+}
+
+/**
+ * @brief: Get the current file title.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_title(void)
+{
+    return id3Tag.title;
+}
+
+
+/**
+ * @brief: Get the current file's album.
+ * @param album_: is a pointer to the char pointer (array of chars) that forms the album word.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_album(void)
+{
+    return id3Tag.album;
+}
+
+
+/**
+ * @brief: Get the current file's artist.
+ * @param artist_: is a pointer to the char pointer (array of chars) that forms the artist word.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_artist(void)
+{
+    return id3Tag.artist;
+}
+
+
+/**
+ * @brief: Get the current file's year.
+ * @param year_: is a pointer to the char pointer (array of chars) that forms the year word.
+ * @return: true if hasID3 returns true.
+ */
+char* mp3_get_tag_year(void)
+{
+    return id3Tag.year;
+}
+
+/*******************************************************************************
+ *******************************************************************************
+                        LOCAL FUNCTION DEFINITIONS
+ *******************************************************************************
+ ******************************************************************************/
+
+
 static void convert_stereo_to_mono(int16_t* outputBuffer, int16_t* auxBuffer) 
 {
     for (int i = 0; i < OUTPUT_BUFFER_SIZE; i++) 
@@ -241,4 +318,42 @@ static void mp3_reset_context()
 	context.mp3InputBufferIndex = 0;
 	context.isFileOpen = false;
 	context.fileSize = 0;
+    id3TagRead =    false;
+}
+
+
+static void mp3_read_id3tag(void)
+{
+    if(!context.isFileOpen)
+    {
+        return;
+    } 
+    // Checks if the file has an ID3 Tag. (ID3 library)
+    if (has_ID3_tag(&context.mp3FileHandler))
+    {
+        id3TagRead = true;
+
+        if (!read_ID3_info(TITLE_ID3, id3Tag.title, ID3_MAX_NUM_CHARS, &context.mp3FileHandler))
+            strcpy(id3Tag.title, DEFAULT_ID3TAG);
+
+        if (!read_ID3_info(ALBUM_ID3, id3Tag.album, ID3_MAX_NUM_CHARS, &context.mp3FileHandler))
+            strcpy(id3Tag.album, DEFAULT_ID3TAG);
+
+        if (!read_ID3_info(ARTIST_ID3, id3Tag.artist, ID3_MAX_NUM_CHARS, &context.mp3FileHandler))
+            strcpy(id3Tag.artist, DEFAULT_ID3TAG);
+
+        if (!read_ID3_info(YEAR_ID3, id3Tag.year, 10, &context.mp3FileHandler))
+            strcpy(id3Tag.year, DEFAULT_ID3TAG);
+
+        unsigned int tagSize = get_ID3_size(&context.mp3FileHandler);
+
+        // Position the internal file pointer where the data starts
+        f_lseek(&context.mp3FileHandler, tagSize);
+        context.mp3BytesLeft -= tagSize;
+    }
+    else
+    {
+    	// Position the internal file pointer where the data starts (the beginning)
+        f_rewind(&context.mp3FileHandler);
+    }
 }

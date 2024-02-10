@@ -15,7 +15,9 @@
 #include "time.h"
 #include "controls.h"
 #include "filesystem.h"
+#include "mp3decoder.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 
@@ -29,21 +31,31 @@ int main (void)
     hw_DisableInterrupts();
     App_Init(); /* Program-specific setup */
     hw_EnableInterrupts();
-/*
-	int result = filesystem_init();
 
-	filesystem_map_files();
+    int result = filesystem_init();
 
-	file_t file = filesystem_get_first_file();
+    result = filesystem_map_files();
 
-	bool isMP3 = filesystem_is_MP3file("/DIR_1/coldplay.mp3");
+    int files = filesystem_get_files_count();
 
-	audio_player_init();
-//ColdplayASkyFullOfStars
-	audio_player_load_song("/DIR_1/coldplay1.mp3");
+    char * folder1 = filesystem_open_folder();
 
-	uint16_t song = audio_player_play();
-*/
-    __FOREVER__
-        App_Run(); /* Program-specific loop  */
+    folder1 = filesystem_open_folder();
+
+    folder1 = filesystem_open_folder();
+
+    char * path = filesystem_get_path();
+
+    audio_player_init();
+
+    int num = audio_player_load_song(path);
+
+    ID3Tag_t tag;
+
+    mp3_get_tag_data(tag);
+
+    num = audio_player_play();
+
+    //__FOREVER__
+     //   App_Run(); /* Program-specific loop  */
 }

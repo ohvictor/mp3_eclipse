@@ -1,8 +1,8 @@
 /***************************************************************************//**
   @file		fileSystem.c
   @brief	Manejo de archivos y directorios en la tarjeta SD
-  @author
-  @date
+  @author	
+  @date		
  ******************************************************************************/
 
 /*******************************************************************************
@@ -18,55 +18,41 @@
 #include "fsl_sd_disk.h"
 #include "sdmmc_config.h"
 #include "fsl_sysmpu.h"
-#include "filesystem.h"
 #include "clock_config.h"
 #include "board.h"
 #include "sdmmc_config.h"
 
-
-
+#include "filesystem.h"
+#include "node.h"
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 
-#define FILE_ARRAY_SIZE 100
+#define SD_ARRAY_SIZE 100
 
 /*******************************************************************************
  * VARIABLES WITH GLOBAL SCOPE
  ******************************************************************************/
-
-// SD flags and status variables
-static bool SD_connected = false;
-static bool SD_error = false;
-static bool SD_hostInitDone = false;
-static FATFS g_fileSystem;
-static uint8_t SD_status = 0;
-
-// Filesystem flags and status variables
+const TCHAR driver_number_buffer[4U] = {SDDISK + '0', ':', '/', '\0'};
+static FIL file_object;
 FRESULT error;
-const TCHAR driver_number_buffer[3U] = {SDDISK + '0', ':', '/'}; 	// Path name
-char ch                            = '0';
+static data_t file;
+static Node *node;
 
-//const TCHAR driver_number_buffer[4U] = {SDDISK + '0', ':', '/', '\0'};
-FATFS file_system;
-FIL file_object;
-DIR directory; /* Directory object */
-FILINFO fileInformation;
-UINT bytesWritten;
-UINT bytesRead;
+element_info_t elements[SD_ARRAY_SIZE];
+static bool SD_hostInitDone = false;
+static bool SD_error = false;
+static FATFS g_fileSystem;
 
-// Filesystem
-file_t file_array[FILE_ARRAY_SIZE] = {};
 int files_count = 0;
-
-BYTE work[FF_MAX_SS];
-
-
 
 /*******************************************************************************
  * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
  ******************************************************************************/
 
+static bool node_append(Node *node, element_info_t *element);
+
+static bool map_files(char *dir, Node *node);
 
 void SD_callback(bool isInserted, void *userData);
 
@@ -74,71 +60,45 @@ void filesystem_map_files_handler(char * filepath);
 
 status_t sdcardWaitCardInsert(void);
 
-
-
 /*******************************************************************************
  *******************************************************************************
                         GLOBAL FUNCTION DEFINITIONS
  *******************************************************************************
  ******************************************************************************/
-/**
- * @brief Init filesystem module
-*/
 bool filesystem_init(void)
 {
-    if(!SD_hostInitDone)
-    {
+	if(!SD_hostInitDone)
+	{
 
 		BOARD_InitPins();
 		BOARD_BootClockRUN();
-	    BOARD_InitDebugConsole();
+		BOARD_InitDebugConsole();
 		SYSMPU_Enable(SYSMPU, false);
 
-	    if (sdcardWaitCardInsert() != kStatus_Success)
-	    {
-	        return false;
-	    }
-	    /*
-        SYSMPU->CESR &= ~SYSMPU_CESR_VLD_MASK;
+		if (sdcardWaitCardInsert() != kStatus_Success)
+		{
+			return false;
+		}
 
-        BOARD_SD_Config(&g_sd, SD_callback, BOARD_SDMMC_SD_HOST_IRQ_PRIORITY, NULL);
+		SD_hostInitDone = true;
 
-        if (SD_HostInit(&g_sd) != kStatus_Success)
-        {
-            //printf("\r\nSD host init fail\r\n");
-            SD_error = true;
-        }
-        */
+		if (f_mount(&g_fileSystem, driver_number_buffer, 0U))
+		{
+			SD_error = true;
+			return false;
+		}
+		error = f_chdrive((char const *)&driver_number_buffer[0U]);
+		if (error)
+		{
+			SD_error = true;
+			return false;
+		}
 
-    	SD_hostInitDone = true;
-
-        if (f_mount(&g_fileSystem, driver_number_buffer, 0U))
-	    {
-            SD_error = true;
-            return false;
-	    }
-        error = f_chdrive((char const *)&driver_number_buffer[0U]);
-        if (error)
-        {
-            SD_error = true;
-            return false;
-        }
-        /*
-		#if FF_USE_MKFS
-			//PRINTF("\r\nMake file system......The time may be long if the card capacity is big.\r\n");
-			if (f_mkfs(driver_number_buffer, 0, work, sizeof work))
-			{
-				//PRINTF("Make file system failed.\r\n");
-				return false;
-			}
-		#endif
-		*/
-
-        return true;
-    }
-    else{
-    	return false;
-    }
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 /**
@@ -146,69 +106,28 @@ bool filesystem_init(void)
 */
 void filesystem_deinit(void)
 {
-	const TCHAR driver_number_buffer[3U] = {SDDISK + '0', ':', '/'};
+	const TCHAR driver_number_buffer[4U] = {SDDISK + '0', ':', '/', '\0'};
 	f_mount(NULL, driver_number_buffer, 1U);
 	g_sd.isHostReady = false;
     SD_hostInitDone = false;
 }
 
 
-/**
- * @brief
- * @param
-*/
-void filesystem_map_files(void)
-{
-	files_count = 0;
-	char buffer[FILE_ARRAY_SIZE] = {0U};
-    filesystem_map_files_handler(buffer);
-}
-
-/*
- * @brief Prints all the files of the file system.
- * */
-void filesystem_print_files(void)
-{
-    printf("Files in SD card: \n");
-	for (int i = 0; i < files_count; i++)
-	{
-		printf("Track: %d -> %s\n", i, file_array[i].file_path);
-	}
-	printf("\n");
-}
-
-/*
- * @brief Reset the file system and return a new first file
- *
- * */
-file_t filesystem_reset_files(void)
+bool filesystem_map_files(void)
 {
     files_count = 0;
-	return filesystem_get_first_file();
-}
+    if (node)
+    {
+        nodeDestroy(node);
+    }
 
-/*
- * @brief
- * @param
- * @return
- * */
-char* filesystem_get_file_name(file_t file)
-{
-    char str[FILENAME_LENGTH];
-	strcpy(str, file.file_path);
-	char* pch = strtok(str, "/"); // pointer to character
-	char filename_str[FILENAME_LENGTH];
-	while (pch != NULL)
-	{
-		//printf("%s\n", pch);
-		strcpy(filename_str, pch);
-		pch = strtok(NULL, "/");
-	}
-	char* file_name;
-	file_name = strtok(filename_str, ".");
-	return file_name;
-}
+    strcpy(elements[0].name, "filelsys");
+    strcpy(elements[0].path, "");
 
+    node = nodeNew(elements[0].name, elements[0].path);
+    bool state = map_files(elements[0].path, node);
+    return state;
+}
 
 /*
  * @brief Gets the amount of files that exist in the file system.
@@ -218,140 +137,238 @@ int filesystem_get_files_count(void)
     return files_count;
 }
 
-/*
- * @brief Detects if a file's path corresponds to a .mp3 file.
- * */
-bool filesystem_is_MP3file(char *filepath)
+char* filesystem_open_folder(void)
 {
-    char *extension;
-	if ((extension = strrchr(filepath, '.')) != NULL)
-	{
-		if (strcmp(extension, ".mp3") == 0)
-		{
-			return true;
-		}
-	}
-	return false;
+    if (!node || !node->children)
+    {
+        return NULL;
+    }
+    if (node->children)
+    {
+        node = node->children;
+        return node->name;
+    }
+    return NULL;
 }
 
-/*
- * @brief Gets the first file of the file system.
- *
- * */
-file_t filesystem_get_first_file(void)
-{
-    if (files_count == 0)
-	{
-		file_t file_null = {.file_index = -1, .file_path = ""};
-		return file_null;
-	}
-	return file_array[0];
+char* filesystem_close_folder(void) {
+    if (!node || !node->parent)
+    {
+        return NULL;
+    }
+    if (node->parent)
+    {
+        node = node->parent;
+        if (!node->parent)
+        {
+            return NULL;
+        }
+        return node->name;
+    }
+    return NULL;
 }
 
-/**
- * @brief Go to next file/folder in a circular order.
- * @return Next file/folder name. Return NULL if not possible.
-*/
-file_t filesystem_get_next_file(file_t current_file)
+data_t* filesystem_open_file(void)
 {
-    int next_file_index = current_file.file_index + 1;
-	if (next_file_index == files_count)
-	{
-		next_file_index = 0;
-	}
-	return file_array[next_file_index];
+    if (!node)
+    {
+        return NULL;
+    }
+    error = f_open(&file_object, node->path, FA_READ);
+    if (!error)
+    {
+        error = f_read(&file_object, file.buffer_read, sizeof(file.buffer_read), &file.bytes_read);
+        if (!error)
+        {
+            f_close(&file_object);
+            return &file;
+        }
+    }
+    return NULL;
 }
 
-/**
- * @brief Go to previous file/folder in a circular order.
- * @return Previous file/folder name. Return NULL if not possible.
-*/
-file_t filesystem_get_previous_file(file_t current_file)
+char* filesystem_get_path(void)
 {
-	int prev_file_index = current_file.file_index - 1;
-	if (current_file.file_index == 0)
-	{
-		prev_file_index = files_count - 1;
-	}
-	return file_array[prev_file_index];
+    if (!node)
+    {
+        return NULL;
+    }
+    else
+    {
+        return node->path;
+    }
 }
 
-/*
- * @brief Adds a file to the file system.
- * @param path: complete file's path.
- *
- * */
-void filesystem_add_files(char *filepath)
+char* filesystem_show_next(void)
 {
-    file_t *new_file = &file_array[files_count];
-	strcpy(new_file->file_path, filepath);
-	new_file->file_index = files_count;
-	files_count++;
+    if (!strcmp(node->path, "") && node->children)
+    {
+        node = node->children;
+        return node->name;
+    }
+    if (!node || !node->next)
+    {
+        if (node)
+        {
+            if (node->prev)
+            {
+                while (node->prev)
+                {
+                    node = node->prev;
+                }
+            }
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    else
+    {
+        node = node->next;
+    }
+    return node->name;
+}
+
+char* filesystem_show_previous(void) {
+    if (!strcmp(node->path, "") && node->children) {
+        node = node->children;
+        return node->name;
+    }
+    if (!node || !node->prev) {
+        if (node) {
+            if (node->next) {
+                while (node->next) {
+                    node = node->next;
+                }
+            }
+        } else {
+            return NULL;
+        }
+    } else {
+        node = node->prev;
+    }
+    return node->name;
+}
+
+/*******************************************************************************
+ *******************************************************************************
+                        LOCAL FUNCTION DEFINITIONS
+ *******************************************************************************
+ ******************************************************************************/
+
+static bool map_files(char *dir, Node *node)
+{
+    DIR dir_aux;
+    FILINFO file_information_aux;
+    static int i = 1;
+    char tempStr[12 + 1];
+
+    if (f_opendir(&dir_aux, dir))
+    {
+        //printf("Open directory failed.\r\n");
+        return false;
+    }
+    Node *node_aux = node->children;
+
+    while (1) {
+        error = f_readdir(&dir_aux, &file_information_aux);
+
+        if ((error != FR_OK) || (file_information_aux.fname[0U] == 0U)) {
+            break;
+        }
+        if (file_information_aux.fname[0] == '.') {
+            continue;
+        }
+
+        if (file_information_aux.fattrib & AM_DIR) {
+            if (strcmp(file_information_aux.fname, "SYSTEM~1"))
+            {
+                tempStr[0] = '-';
+                tempStr[1] = '-';
+                tempStr[2] = '>';
+                tempStr[3] = '\0';
+
+                strcat(tempStr, file_information_aux.fname);
+
+                memcpy(elements[i].name, tempStr, strlen(tempStr));
+
+                elements[i].name[strlen(tempStr)] = '\0';
+
+                memcpy(elements[i].path, dir, strlen(dir));
+
+                elements[i].path[strlen(dir)] = '/';
+
+                elements[i].path[strlen(dir) + 1] = '\0';
+
+                strcat(elements[i].path, file_information_aux.fname);
+
+                if (!node_append(node, elements + i))
+                {
+                    return false;
+                }
+                if (!node_aux)
+                {
+                    node_aux = node->children;
+                }
+                else
+                {
+                    node_aux = node_aux->next;
+                }
+
+                i++;
+
+                map_files(elements[i - 1].path, node_aux);
+            }
+        }
+        else
+        {
+            memcpy(elements[i].name, file_information_aux.fname, strlen(file_information_aux.fname));
+
+            memcpy(elements[i].path, dir, strlen(dir));
+
+            elements[i].path[strlen(dir)] = '/';
+
+            elements[i].path[strlen(dir) + 1] = '\0';
+
+            strcat(elements[i].path, file_information_aux.fname);
+
+            if (!node_append(node, elements + i))
+            {
+                return false;
+            }
+
+            i++;
+            files_count += 1;
+
+            if (!node_aux)
+            {
+                node_aux = node->children;
+            }
+            else
+            {
+                node_aux = node_aux->next;
+            }
+        }
+    }
+
+    return true;
+}
+
+static bool node_append(Node *node, element_info_t *element)
+{
+    if (!nodeAppend(node, nodeNew(element->name, element->path)))
+    {
+        node = NULL;
+    }
+    if (!node)
+    {
+        return false;
+    }
+    return true;
 }
 
 
-/*************************************************************************************
- * 		LOCAL FUNCTIONS DECLARATIONS
- ************************************************************************************/
-
-void SD_callback(bool isInserted, void *userData)
-{
-	if(SD_connected == isInserted)
-	{
-		SD_error = true;
-	}
-	else if(isInserted)
-	{
-		SD_status = 1;
-	}
-	else
-	{
-		SD_status = 2;
-	}
-
-	SD_connected = isInserted;
-}
-
-void filesystem_map_files_handler(char * filepath)
-{
-	if (f_opendir(&directory, filepath))
-	{
-		//printf("Open directory failed.\r\n");
-		return;
-	}
-	for (;;)
-	{
-		error = f_readdir(&directory, &fileInformation);
-		if ((error != FR_OK) || (fileInformation.fname[0U] == 0U))
-		{
-			break;
-		}
-		if (fileInformation.fname[0] == '.')
-		{
-			continue;
-		}
-		if (fileInformation.fattrib & AM_DIR)
-		{
-			int i = strlen(filepath);
-			char * fn = fileInformation.fname;
-			*(filepath+i) = '/'; strcpy(filepath+i+1, fn);
-			filesystem_map_files_handler(filepath);
-			*(filepath+i) = 0;
-		}
-		else
-		{
-			int i = strlen(filepath);
-			char * fn = fileInformation.fname;
-			*(filepath+i) = '/'; strcpy(filepath+i+1, fn);
-
-			if (filesystem_is_MP3file(filepath))
-				filesystem_add_files(filepath);
-
-			*(filepath+i) = 0;
-		}
-	}
-	f_closedir(&directory);
-}
 
 status_t sdcardWaitCardInsert(void)
 {
