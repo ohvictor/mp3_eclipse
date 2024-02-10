@@ -1,2 +1,5 @@
 /.metadata/
 /MP3-Final_sdcard_fatfs/Debug/
+*.xml
+*.properties
+*.dtd
