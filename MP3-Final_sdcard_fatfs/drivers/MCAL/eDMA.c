@@ -132,20 +132,20 @@ void DMA_ISRhandler(DMAChannel_t channel)
 
 /*	Interruption Handlers	*/
 
-/*
 __ISR__ DMA0_IRQHandler()
 {
+	/* Clear the interrupt flag. */
 	DMAptr->CINT |= DMA_CINT_CINT(0); // Creo que es asi
 	DMA_ISRhandler(0);
 }
-*/
-/*
+
 __ISR__ DMA1_IRQHandler()
 {
+	/* Clear the interrupt flag. */
 	DMAptr->CINT |= DMA_CINT_CINT(1); // Creo que es asi
 	DMA_ISRhandler(1);
 }
-*/
+
 __ISR__ DMA2_IRQHandler()
 {
 	/* Clear the interrupt flag. */

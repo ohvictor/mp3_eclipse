@@ -1,52 +1,32 @@
-/***************************************************************************//**
-  @file     FTM.c
-  @brief    
-  @author   
- ******************************************************************************/
-
-/*******************************************************************************
- * INCLUDE HEADER FILES
- ******************************************************************************/
 
 #include "FTM.h"
-#include "PortConfig.h"
-
-/*******************************************************************************
- * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
- ******************************************************************************/
-
-#define 		T_TIMER_NS 			20
-#define 		T_PWM_NS   			1250
-#define 		MOD_TICKS  			(T_PWM_NS/T_TIMER_NS - 1)  
-
-/*******************************************************************************
- * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
- ******************************************************************************/
-
-/*******************************************************************************
- * VARIABLES WITH GLOBAL SCOPE
- ******************************************************************************/
-
-/*******************************************************************************
- * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
- ******************************************************************************/
-
-/*******************************************************************************
- * ROM CONST VARIABLES WITH FILE LEVEL SCOPE
- ******************************************************************************/
-
-/*******************************************************************************
- * STATIC VARIABLES AND CONST VARIABLES WITH FILE LEVEL SCOPE
- ******************************************************************************/
-
-/*******************************************************************************
- *******************************************************************************
-                        GLOBAL FUNCTION DEFINITIONS
- *******************************************************************************
- ******************************************************************************/
+#include "PORTConfig.h"
+#include "GPIO.h"
+#include "FTM.h"
 
 
-void FTM_init (uint16_t initialDuty)
+void PWM_ISR(void);
+
+uint16_t PWM_modulus = 63-1;
+uint16_t PWM_duty    = 30;//5000-1;
+
+/* FTM0 fault, overflow and channels interrupt handler*/
+__ISR__ FTM0_IRQHandler(void)
+{
+	PWM_ISR();
+}
+
+void PWM_ISR (void)
+{
+	FTM_ClearOverflowFlag (FTM0);
+
+	//FTM_SetCounter(FTM0, 0, PWM_duty++);  //change DC
+	//GPIO_Toggle(PTC, 1 << 8);			  //GPIO pin PTC8
+	//PWM_duty %= PWM_modulus;
+}
+
+
+void FTM_Init (void)
 {
 	SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
 	SIM->SCGC6 |= SIM_SCGC6_FTM1_MASK;
@@ -64,149 +44,133 @@ void FTM_init (uint16_t initialDuty)
 	FTM2->PWMLOAD = FTM_PWMLOAD_LDOK_MASK | 0x0F;
 	FTM3->PWMLOAD = FTM_PWMLOAD_LDOK_MASK | 0x0F;
 
-	// PTC 1 as PWM
-	PCRstr UserPCR;
+	/*
+	 * TO DO
+	 */
 
-	// Set only those needed
-	UserPCR.PCR=false;						
-
-	UserPCR.FIELD.DSE=true;
-	UserPCR.FIELD.MUX=PORT_mAlt4;			
-	UserPCR.FIELD.IRQC=PORT_eDisabled;
-
-	// PTC1 FTM Output
-	port_config_pcr(PORTC,1,UserPCR);		
-
-	//  Set FTM configuration
-	FTM_set_prescaler(FTM0, FTM_PSC_x1);
-	FTM_set_interrupt_mode (FTM0,FTM_CH_0, true); 					
-
-	//	Set FTM as PWM mode
-	FTM_set_working_mode(FTM0, 0, FTM_mPulseWidthModulation);			
-	FTM_set_pulse_width_modulation_logic(FTM0, 0, FTM_lAssertedHigh);   
-
-	//  Set PWWM Modulus and initial Duty
-	FTM_set_modulus(FTM0, MOD_TICKS);
-	FTM_set_counter(FTM0, 0, initialDuty); 
-
-	//  Enable FTM0-CH0 DMA Request
-	FTM_dma_mode (FTM0,FTM_CH_0,FTM_DMA_ON); 
+	//PWM_Init();
 }
 
 
-void FTM_set_prescaler (FTM_t ftm, FTM_prescale_t data)
+
+// Setters
+
+void FTM_SetPrescaler (FTM_t ftm, FTM_Prescal_t data)
 {
 	ftm->SC = (ftm->SC & ~FTM_SC_PS_MASK) | FTM_SC_PS(data);
 }
 
-void FTM_set_modulus (FTM_t ftm, FTMdata_t data)
+void FTM_SetModulus (FTM_t ftm, FTMData_t data)
 {
 	ftm->CNTIN = 0X00;
 	ftm->CNT = 0X00;
 	ftm->MOD = FTM_MOD_MOD(data);
 }
 
-FTMdata_t FTM_get_modulus (FTM_t ftm)
+FTMData_t FTM_GetModulus (FTM_t ftm)
 {
 	return ftm->MOD & FTM_MOD_MOD_MASK;
 }
 
-void FTM_start_clock (FTM_t ftm)
+void FTM_StartClock (FTM_t ftm)
 {
 	ftm->SC |= FTM_SC_CLKS(0x01);
 }
 
-void FTM_stop_clock (FTM_t ftm)
+void FTM_StopClock (FTM_t ftm)
 {
 	ftm->SC &= ~FTM_SC_CLKS(0x01);
 }
 
-void FTM_set_overflow_mode (FTM_t ftm, bool mode)
+void FTM_SetOverflowMode (FTM_t ftm, bool mode)
 {
 	ftm->SC = (ftm->SC & ~FTM_SC_TOIE_MASK) | FTM_SC_TOIE(mode);
 }
 
-bool FTM_is_overflow_pending (FTM_t ftm)
+bool FTM_IsOverflowPending (FTM_t ftm)
 {
 	return ftm->SC & FTM_SC_TOF_MASK;
 }
 
-void FTM_clear_overflow_flag (FTM_t ftm)
+void FTM_ClearOverflowFlag (FTM_t ftm)
 {
 	ftm->SC &= ~FTM_SC_TOF_MASK;
 }
 
-void FTM_set_working_mode (FTM_t ftm, FTMchannel_t channel, FTMmode_t mode)
+void FTM_SetWorkingMode (FTM_t ftm, FTMChannel_t channel, FTMMode_t mode)
 {
 	ftm->CONTROLS[channel].CnSC = (ftm->CONTROLS[channel].CnSC & ~(FTM_CnSC_MSB_MASK | FTM_CnSC_MSA_MASK)) |
 			                      (FTM_CnSC_MSB((mode >> 1) & 0X01) | FTM_CnSC_MSA((mode >> 0) & 0X01));
 }
 
-FTMmode_t FTM_get_working_mode (FTM_t ftm, FTMchannel_t channel)
+FTMMode_t FTM_GetWorkingMode (FTM_t ftm, FTMChannel_t channel)
 {
 	return (ftm->CONTROLS[channel].CnSC & (FTM_CnSC_MSB_MASK | FTM_CnSC_MSA_MASK)) >> FTM_CnSC_MSA_SHIFT;
 }
 
-void 	FTM_set_input_capture_edge (FTM_t ftm, FTMchannel_t channel, FTMedge_t edge)
+void FTM_SetInputCaptureEdge (FTM_t ftm, FTMChannel_t channel, FTMEdge_t edge)
 {
 	ftm->CONTROLS[channel].CnSC = (ftm->CONTROLS[channel].CnSC & ~(FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK)) |
 				                  (FTM_CnSC_ELSB((edge >> 1) & 0X01) | FTM_CnSC_ELSA((edge >> 0) & 0X01));
 }
 
-FTMedge_t FTM_get_input_capture_edge (FTM_t ftm, FTMchannel_t channel)
+FTMEdge_t FTM_GetInputCaptureEdge (FTM_t ftm, FTMChannel_t channel)
 {
 	return (ftm->CONTROLS[channel].CnSC & (FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK)) >> FTM_CnSC_ELSA_SHIFT;
 }
 
-void FTM_set_output_compare_effect (FTM_t ftm, FTMchannel_t channel, FTMeffect_t effect)
+void FTM_SetOutputCompareEffect (FTM_t ftm, FTMChannel_t channel, FTMEffect_t effect)
 {
 	ftm->CONTROLS[channel].CnSC = (ftm->CONTROLS[channel].CnSC & ~(FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK)) |
 				                  (FTM_CnSC_ELSB((effect >> 1) & 0X01) | FTM_CnSC_ELSA((effect >> 0) & 0X01));
 }
 
-FTMeffect_t FTM_get_output_compare_effect (FTM_t ftm, FTMchannel_t channel)
+FTMEffect_t FTM_GetOutputCompareEffect (FTM_t ftm, FTMChannel_t channel)
 {
 	return (ftm->CONTROLS[channel].CnSC & (FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK)) >> FTM_CnSC_ELSA_SHIFT;
 }
 
-void FTM_set_pulse_width_modulation_logic (FTM_t ftm, FTMchannel_t channel, FTMlogic_t logic)
+void FTM_SetPulseWidthModulationLogic (FTM_t ftm, FTMChannel_t channel, FTMLogic_t logic)
 {
 	ftm->CONTROLS[channel].CnSC = (ftm->CONTROLS[channel].CnSC & ~(FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK)) |
 				                  (FTM_CnSC_ELSB((logic >> 1) & 0X01) | FTM_CnSC_ELSA((logic >> 0) & 0X01));
 }
 
-FTMlogic_t FTM_get_pulse_width_modulation_logic (FTM_t ftm, FTMchannel_t channel)
+FTMLogic_t FTM_GetPulseWidthModulationLogic (FTM_t ftm, FTMChannel_t channel)
 {
 	return (ftm->CONTROLS[channel].CnSC & (FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK)) >> FTM_CnSC_ELSA_SHIFT;
 }
 
-void FTM_set_counter (FTM_t ftm, FTMchannel_t channel, FTMdata_t data)
+void FTM_SetCounter (FTM_t ftm, FTMChannel_t channel, FTMData_t data)
 {
 	ftm->CONTROLS[channel].CnV = FTM_CnV_VAL(data);
 }
 
-FTMdata_t FTM_get_counter (FTM_t ftm, FTMchannel_t channel)
+FTMData_t FTM_GetCounter (FTM_t ftm, FTMChannel_t channel)
 {
 	return ftm->CONTROLS[channel].CnV & FTM_CnV_VAL_MASK;
 }
 
-void FTM_set_interrupt_mode (FTM_t ftm, FTMchannel_t channel, bool mode)
+void FTM_SetInterruptMode (FTM_t ftm, FTMChannel_t channel, bool mode)
 {
 	ftm->CONTROLS[channel].CnSC = (ftm->CONTROLS[channel].CnSC & ~FTM_CnSC_CHIE_MASK) | FTM_CnSC_CHIE(mode);
 }
 
-bool FTM_is_interrupt_pending (FTM_t ftm, FTMchannel_t channel)
+bool FTM_IsInterruptPending (FTM_t ftm, FTMChannel_t channel)
 {
 	return ftm->CONTROLS[channel].CnSC & FTM_CnSC_CHF_MASK;
 }
 
-void FTM_clear_interrupt_flag (FTM_t ftm, FTMchannel_t channel)
+void FTM_ClearInterruptFlag (FTM_t ftm, FTMChannel_t channel)
 {
 	ftm->CONTROLS[channel].CnSC &= ~FTM_CnSC_CHF_MASK;
 }
 
-void FTM_dma_mode (FTM_t ftm, FTMchannel_t channel, bool dma_mode)
+void FTM_DmaMode (FTM_t ftm, FTMChannel_t channel, bool dma_mode)
 {
 	ftm->CONTROLS[channel].CnSC = (ftm->CONTROLS[channel].CnSC & ~(FTM_CnSC_DMA_MASK)) |
 			                      (FTM_CnSC_DMA(dma_mode));
 }
+
+
+

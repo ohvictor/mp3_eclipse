@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "vumeter.h"
+#include "timer.h"
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -28,9 +30,14 @@ void mp3_pause(void);
 void mp3_stop(void);
 void mp3_next(void);
 void mp3_prev(void);
+
+void display_callback(void);
 /*******************************************************************************
  * STATIC VARIABLES AND CONST VARIABLES WITH FILE LEVEL SCOPE
  ******************************************************************************/
+
+tim_id_t display_timer_id;
+static uint8_t powers[8];
 
 //void updateViewers(char* displayArray, char LEDStatus,char selIndex);
 //SD
@@ -46,7 +53,26 @@ static bool sd_state = false;
 
 void App_Init (void)
 {
+	ctrl_set_play_callback(mp3_play);
+	ctrl_set_pause_callback(mp3_pause);
+	ctrl_set_stop_callback(mp3_stop);
+	ctrl_set_next_callback(mp3_next);
+	ctrl_set_prev_callback(mp3_prev);
+	control_init();
 
+	FSM_start();
+
+	vu_init();
+	int i;
+	for(i=0; i<8; i++)
+	{
+		powers[i] = 0xff-i*32;
+	}
+	vu_update(powers);
+
+	timerInit();
+	display_timer_id = timerGetId();
+	timerStart(display_timer_id, 500, TIM_MODE_PERIODIC, display_callback);
 }
 
 
@@ -94,7 +120,15 @@ void mp3_prev(void)
 	evQueueAdd(EV_PREV);
 }
 
-
+void display_callback(void)
+{
+	int i;
+	for(i=0; i<8; i++)
+	{
+		powers[i] += 0x20;
+	}
+	vu_update(powers);
+}
 
 
 /*******************************************************************************

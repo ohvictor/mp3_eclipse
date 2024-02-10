@@ -29,7 +29,7 @@ int main (void)
     hw_DisableInterrupts();
     App_Init(); /* Program-specific setup */
     hw_EnableInterrupts();
-
+/*
 	int result = filesystem_init();
 
 	filesystem_map_files();
@@ -43,9 +43,7 @@ int main (void)
 	audio_player_load_song("/DIR_1/coldplay1.mp3");
 
 	uint16_t song = audio_player_play();
-
-	FSM_start();
-
+*/
     __FOREVER__
         App_Run(); /* Program-specific loop  */
 }

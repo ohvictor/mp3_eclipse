@@ -2,9 +2,9 @@
 #include "DRVLEDDISPLAY.h"
 #include "FTM.h"
 #include "eDMA.h"
-#include "PORT.h"
+#include "PortConfig.h"
 
-#define LEVEL_ON	(2U)
+#define LEVEL_ON	(4U)
 #define	LEVEL_OFF	(0U)
 
 typedef struct
@@ -22,7 +22,7 @@ void screen_update(void);
 void vu_init()
 {
 	// Initialize LED matrix
-	PORT_Init();
+	port_config_init();
 	DMA_init();
 	FTM_Init();
 	LED_DISPLAY_init();
@@ -76,17 +76,13 @@ void vu_update(uint8_t bands[F_BAND_N])
 	for(j=0; j<F_BAND_N; j++)
 	{
 		uint8_t power = bands[j]/32; // Solo me interesan los 3 bits mas altos de resolucion
-
-		for(i=0; i<LED_ROWS; i++)
+		for(i=0; i<LED_ROWS-power; i++)
 		{
-			if(i<power)
-			{
-				SW_matrix[i][j].state = 0;
-			}
-			else
-			{
-				SW_matrix[i][j].state = 1;
-			}
+			SW_matrix[i][j].state = 0;
+		}
+		for(i=LED_ROWS-power; i<LED_ROWS; i++)
+		{
+			SW_matrix[i][j].state = 1;
 		}
 	}
 	screen_update();

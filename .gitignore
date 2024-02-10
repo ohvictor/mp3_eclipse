@@ -3,3 +3,6 @@
 *.xml
 *.properties
 *.dtd
+/ZephyrRTOS_TAD_logs/
+/FreeRTOS_TAD_logs/
+/AzureRTOS_TAD_logs/

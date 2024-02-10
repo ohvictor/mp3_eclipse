@@ -204,7 +204,10 @@ void DMA_DAC_PingPong_continue()
 void DMA_DAC_init_display_table(uint32_t memDirTable) {
     // Initialize ports and FTM.
     port_config_init();
-    FTM_init(*((uint16_t*)memDirTable));
+    FTM_Init();
+    /**
+     * Terminar de configurar aca el FTMx
+     */
 
     // Disable interrupts temporarily for configuration.
     hw_DisableInterrupts();
@@ -256,12 +259,12 @@ void DMA_DAC_display_table(void) {
     DMA0->ERQ |= DMA_ERQ_ERQ1_MASK;
 
     // Reinitialize FTM and start the clock.
-    FTM_init(*((uint16_t*)global_memDirTable));
-    FTM_start_clock(FTM0);
+    FTM_Init(); //Aca tambien
+    FTM_StartClock(FTM0);
 
     return;
 }
-
+/*
 __ISR__ DMA0_IRQHandler(void)
 {
 	DMA0->INT = DMA_INT_INT0(1);
@@ -279,6 +282,7 @@ __ISR__ DMA0_IRQHandler(void)
 __ISR__ DMA1_IRQHandler(void)
 {
     DMA0->INT = DMA_INT_INT1(1);	
-	FTM_stop_clock (FTM0);
+    FTM_StopClock(FTM0);
 	FTM1->CNT = 0X00;
 }
+*/

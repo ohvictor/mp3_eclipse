@@ -9,11 +9,11 @@ void port_config_init (void)
 	SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
 
 
-	PORT_ClearPortFlags (PORTA);
-	PORT_ClearPortFlags (PORTB);
-	PORT_ClearPortFlags (PORTC);
-	PORT_ClearPortFlags (PORTD);
-	PORT_ClearPortFlags (PORTE);
+	port_config_clear_port_flags (PORTA);
+	port_config_clear_port_flags (PORTB);
+	port_config_clear_port_flags (PORTC);
+	port_config_clear_port_flags (PORTD);
+	port_config_clear_port_flags (PORTE);
 
 	NVIC_EnableIRQ(PORTA_IRQn);
 	NVIC_EnableIRQ(PORTB_IRQn);

@@ -11,7 +11,7 @@
 #include "DRVLEDDISPLAY.h"
 #include "eDMA.h"
 #include "FTM.h"
-#include "PORT.h"
+#include "PORTConfig.h"
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -24,10 +24,15 @@ typedef enum {
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
+/**
+ * 75
+ * 21
+ * 54
+ */
 
-#define PWM_MOD 75  //Con prescaler setteado en 1->resolucion 20ns. 63*20ns = 1,26us es el periodo que necesita el ws2812
-#define PWM_LOW 21 // 19/63 = 0.3 ->Duty cycle que indica un bit in =0
-#define PWM_HIGH 54  // 37/63 = 0.58 -> Duty cycle que indica un bit in =1
+#define PWM_MOD		75 //Con prescaler setteado en 1->resolucion 20ns. 63*20ns = 1,26us es el periodo que necesita el ws2812
+#define PWM_LOW		21 // 19/63 = 0.3 ->Duty cycle que indica un bit in =0
+#define PWM_HIGH	54  // 37/63 = 0.58 -> Duty cycle que indica un bit in =1
 
 /*******************************************************************************
  * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
@@ -80,7 +85,7 @@ void LED_DISPLAY_init()
 	UserPCR.FIELD.MUX=PORT_mAlt4;			// FTM3 CH0
 	UserPCR.FIELD.IRQC=PORT_eDisabled;
 
-	PORT_Configure2 (PORTD,0,UserPCR);		// PTD0 FTM Output
+	port_config_pcr(PORTD,0,UserPCR);		// PTD0 FTM Output
 
 	//  Set FTM configuration
 	FTM_SetPrescaler(FTM3, FTM_PSC_x1); //20ns resolution
@@ -95,7 +100,7 @@ void LED_DISPLAY_init()
 	FTM_SetCounter(FTM3, 0, 30);
 
 	//  Enable FTM3-CH0 DMA Request
-	FTM_DmaMode (FTM3,FTM_CH_0,FTM_DMA_ON); // DMA ON
+	FTM_DmaMode(FTM3,FTM_CH_0,FTM_DMA_ON); // DMA ON
 	//FTM_StartClock(FTM0);
 
 
