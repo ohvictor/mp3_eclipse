@@ -1,46 +1,72 @@
-/*
- * DRVLEDDISPLAY.c
- *
- *      Author: Francisco Musich
- */
+/*******************************************************************************
+  @file     DRVLEDDISPLAY.C
+  @brief    LED Matrix driver
+  @author   Victor Oh
+ ******************************************************************************/
+
+/*******************************************************************************
+ * INCLUDE HEADER FILES
+ ******************************************************************************/
 
 #include "DRVLEDDISPLAY.h"
+#include "eDMA.h"
+#include "FTM.h"
+#include "PORT.h"
 
-/*	Global Static Variables declaration and definition	*/
+/*******************************************************************************
+ * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
+ ******************************************************************************/
 
-static float display_brightness; //Should be less than one. Constant used to multiply by each RGB element
+typedef enum {
+	BUFFER_A,
+	BUFFER_B
+}PPBuffer_t;
 
-static RGB_t dot_color; //No use as of yet
-
-
-static PPBuffer_t write_buffer; //Determines which Buffer is available for cpu to write on, flips after DMA transfer (display update)
-
-static RGB_t game_matrix[LED_DISPLAY_HEIGHT][LED_DISPLAY_HEIGHT]; //contains RGB values which will be sent to the display
-
-static uint16_t BufferA[LED_DISPLAY_HEIGHT][LED_DISPLAY_WIDTH][BITS_PER_CELL]; //PWM values which represent each bit of each RGB value, for every LED on the display
-static uint16_t BufferB[LED_DISPLAY_HEIGHT][LED_DISPLAY_WIDTH][BITS_PER_CELL];
-
-
-//static uint8_t resetBuffer[]={1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}; //Cantidad de ticks que tengo que deshabilitar la salida del FTM para que se haga el reset.
+#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 
 
-/*	Local Functions declaration	*/
+#define PWM_MOD 75  //Con prescaler setteado en 1->resolucion 20ns. 63*20ns = 1,26us es el periodo que necesita el ws2812
+#define PWM_LOW 21 // 19/63 = 0.3 ->Duty cycle que indica un bit in =0
+#define PWM_HIGH 54  // 37/63 = 0.58 -> Duty cycle que indica un bit in =1
+
+/*******************************************************************************
+ * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
+ ******************************************************************************/
+
+uint32_t rgb_2_grb(RGB_t color);
 
 static void swapWriteBuffer();
 static void RGB2PWMLevel(); //Translates bit to PWM value
-void DMA0_IRQCallback();  // Swaps buffer and disables DMA and FTM channels
-void applyBrightnessSetting();
-void update_game_matrix(int modelMatrix[LED_DISPLAY_HEIGHT][LED_DISPLAY_WIDTH]);
-void game_matrix_init(RGB_t initColor);
+void game_matrix_init(void);
 
-/*	GLOBAL FUNCTION DEFINITIONS	*/
+
+void DMA0_IRQCallback();  // Swaps buffer and disables DMA and FTM channels
+
+
+/*******************************************************************************
+ * STATIC VARIABLES AND CONST VARIABLES WITH FILE LEVEL SCOPE
+ ******************************************************************************/
+
+/**
+ * Ping Pong buffers
+ */
+
+static PPBuffer_t write_buffer; //Determines which Buffer is available for cpu to write on, flips after DMA transfer (display update)
+static uint16_t BufferA[LED_ROWS][LED_COLS][LED_BITS];
+static uint16_t BufferB[LED_ROWS][LED_COLS][LED_BITS];
+
+static RGB_t matrix_data[LED_ROWS][LED_COLS];
+
+/*******************************************************************************
+ *******************************************************************************
+                        GLOBAL FUNCTION DEFINITIONS
+ *******************************************************************************
+ ******************************************************************************/
 
 /*	LED_DISPLAY_init()*/
 //Sets up FTM3 channel 0
 //Sets up DMA channel 0
 //Initializes game_matrix to 0 and defaults brightness
-
-
 void LED_DISPLAY_init()
 {
 	//Set up FTM03 PWM mode  period = 1,25uS Allowing  DMA Transfers
@@ -149,134 +175,74 @@ void LED_DISPLAY_init()
 	//setColor(255,0,0);
 	write_buffer = BUFFER_A;
 
+	// TODO: CHANGE
 	//Init values for game_matrix and both buffers set to 0
-	RGB_t testColor ={.red =0, .blue =0, .green =0};
-	game_matrix_init(testColor);
-	LED_DISPLAY_setBrightness(0.5);
+
+	game_matrix_init();
+
 	RGB2PWMLevel();
+
 	swapWriteBuffer();
+
 	RGB2PWMLevel();
-	//DMA_enableChannel(0);
+	DMA_enableChannel(CHANNEL_0);
 }
+
+void LED_DISPLAY_updateMatrix(MATRIX_BOARD_t modelMatrix)
+{
+	int i,j;
+	for(i=0; i<LED_ROWS; i++)
+	{
+		for(j=0; j<LED_COLS; j++)
+		{
+			matrix_data[i][j] = modelMatrix.table[i][j];
+		}
+	}
+
+	RGB2PWMLevel();						//Translates individual bits in rgb dot to Duty Cycle settings according to ws2812's needs
+
+	FTM_StartClock(FTM3);				//Starts Clock and DMA module, transmitting bit information to the Led Matrix
+	DMA_enableChannel(CHANNEL_0);
+
+}
+/*******************************************************************************
+ *******************************************************************************
+                        LOCAL FUNCTION DEFINITIONS
+ *******************************************************************************
+ ******************************************************************************/
+
 
 /*LED_DISPLAY_updateMatrix(void* modelMatrix)*/
 // Called upon every time the model updates
 // Starts transmission to LED Display
 
-void LED_DISPLAY_updateMatrix(MATRIX_BOARD_t modelMatrix)
-{
-	dot_color = modelMatrix.rgb_color;
-	display_brightness = modelMatrix.brightness;
-
-	update_game_matrix(modelMatrix.table); 	//Translate Model Matrix to RGB matrix the output is able to understand
-	applyBrightnessSetting();			//Multiply each rgb cell by brightness setting.
-	RGB2PWMLevel();						//Translates individual bits in rgb dot to Duty Cycle settings according to ws2812's needs
-	FTM_StartClock(FTM3);				//Starts Clock and DMA module, transmitting bit information to the Led Matrix
-	DMA_enableChannel(CHANNEL_0);
-
-}
-
-// Getter functions
-
-uint8_t LED_DISPLAY_getBrightness()
-{
-	return display_brightness;
-}
-
-RGB_t LED_DISPLAY_getDotColor()
-{
-	return dot_color;
-}
-
-// Setter Function
-
-void LED_DISPLAY_setBrightness(float newBri)
-{
-	display_brightness = newBri;
-	//Multiply each cell by brightness
-	applyBrightnessSetting();
-
-}
-
-
-void LED_DISPLAY_setDotColor(RGB_t newColor)
-{
-	dot_color = newColor;
-}
 
 
 /*	Static file scope function Definitions	*/
 
 static void RGB2PWMLevel() // Translates logical level to timings required by the display
-{	//Overcomplicated, tratar de arreglar
+{
 	int i,j,k;
-	uint8_t aux_red = 0;
-	uint8_t aux_green = 0;
-	uint8_t aux_blue = 0;
 
-	bool red_bit_chk = false;
-	bool green_bit_chk = false;
-	bool blue_bit_chk = false;
-	for (i = 0; i < LED_DISPLAY_HEIGHT; ++i)
+	uint16_t* write_addr;
+	if(write_buffer == BUFFER_A)
+		write_addr = &BufferA[0][0][0];
+	else if(write_buffer == BUFFER_B)
+		write_addr = &BufferB[0][0][0];
+
+	for (i=0; i<LED_ROWS; i++)
 	{
-		for (j = 0; j < LED_DISPLAY_WIDTH; ++j)
+		for (j=0; j<LED_COLS; j++)
 		{
-			aux_red = game_matrix[i][j].red;
-			aux_green = game_matrix[i][j].green;
-			aux_blue = game_matrix[i][j].blue;
-			for (k = 0; k <BITS_PER_COLOR ; k++)
+			uint32_t color = rgb_2_grb(matrix_data[i][j]);
+			uint16_t* led_addr = write_addr + i*LED_COLS*LED_BITS + j*LED_BITS;
+			for (k=0; k<LED_BITS; k++)
 			{
-				red_bit_chk = CHECK_BIT(aux_red, BITS_PER_COLOR-1-k);
-				green_bit_chk = CHECK_BIT(aux_green, BITS_PER_COLOR-1-k);
-				blue_bit_chk = CHECK_BIT(aux_blue, BITS_PER_COLOR-1-k);
-
-				if(green_bit_chk)
-				{
-					if(write_buffer == BUFFER_A)
-						BufferA[i][j][k] = PWM_HIGH;
-					else
-						BufferB[i][j][k] = PWM_HIGH;
-				}
+				if(color & (0x00800000 >> k))
+					*(led_addr + k) = PWM_HIGH;
 				else
-				{
-					if(write_buffer == BUFFER_A)
-						BufferA[i][j][k] = PWM_LOW;
-					else
-						BufferB[i][j][k] = PWM_LOW;
-				}
-
-				if(red_bit_chk)
-				{
-					if(write_buffer == BUFFER_A)
-						BufferA[i][j][k+BITS_PER_COLOR] = PWM_HIGH;
-					else
-						BufferB[i][j][k+BITS_PER_COLOR] = PWM_HIGH;
-				}
-				else
-				{
-					if(write_buffer == BUFFER_A)
-						BufferA[i][j][k+BITS_PER_COLOR] = PWM_LOW;
-					else
-						BufferB[i][j][k+BITS_PER_COLOR] = PWM_LOW;
-				}
-
-				if(blue_bit_chk)
-				{
-					if(write_buffer == BUFFER_A)
-						BufferA[i][j][k+2*BITS_PER_COLOR] = PWM_HIGH;
-					else
-						BufferB[i][j][k+2*BITS_PER_COLOR] = PWM_HIGH;
-
-				}
-				else
-				{
-					if(write_buffer==BUFFER_A)
-						BufferA[i][j][k+2*BITS_PER_COLOR] = PWM_LOW;
-					else
-						BufferB[i][j][k+2*BITS_PER_COLOR] = PWM_LOW;
-				}
+					*(led_addr + k) = PWM_LOW;
 			}
-
 		}
 	}
 }
@@ -294,68 +260,50 @@ static void swapWriteBuffer() //Switches between active write buffer
 	return;
 }
 
-void applyBrightnessSetting()
+void game_matrix_init(void)
 {
 	int i,j;
-	for (i = 0; i < LED_DISPLAY_HEIGHT; ++i)
+	for (i = 0; i < LED_ROWS; ++i)
 	{
-		for (j = 0; j < LED_DISPLAY_WIDTH; ++j)
+		for (j = 0; j < LED_COLS; ++j)
 		{
+			if(i<8)
+			{
+				matrix_data[i][j].g = (i%2)*128 + j*16;
+				matrix_data[i][j].r = (i%2)*128 + j*16;
+				matrix_data[i][j].b = (i%2)*128 + j*16;
+			}
 
-			game_matrix[i][j].red =(uint8_t)((game_matrix[i][j].red)*display_brightness);
-			game_matrix[i][j].green =(uint8_t)((game_matrix[i][j].green)*display_brightness);
-			game_matrix[i][j].blue =(uint8_t)((game_matrix[i][j].blue)*display_brightness);
+			if(i<6)
+			{
+				matrix_data[i][j].g = 0;
+				matrix_data[i][j].r = 0;
+				matrix_data[i][j].b = (i%2)*128 + j*16;
+			}
 
+			if(i<4)
+			{
+				matrix_data[i][j].g = 0;
+				matrix_data[i][j].r = (i%2)*128 + j*16;
+				matrix_data[i][j].b = 0;
+			}
+
+			if(i<2)
+			{
+				matrix_data[i][j].g = (i%2)*128 + j*16;
+				matrix_data[i][j].r = 0;
+				matrix_data[i][j].b = 0;
+			}
 		}
 
 	}
 }
 
-
-void game_matrix_init(RGB_t initColor)
+uint32_t rgb_2_grb(RGB_t color)
 {
-	int i,j;
-		for (i = 0; i < LED_DISPLAY_HEIGHT; ++i)
-		{
-			for (j = 0; j < LED_DISPLAY_WIDTH; ++j)
-			{
-				if((i==j)||(i==0)||(j==0)) //Solo para esta prueba va el condicional
-				{
-					game_matrix[i][j].red = initColor.red;
-					game_matrix[i][j].green =initColor.green;
-					game_matrix[i][j].blue = initColor.blue;
-				}
-				else
-				{
-					game_matrix[i][j].red = 0;
-					game_matrix[i][j].green =0;
-					game_matrix[i][j].blue = 0;
-				}
-			}
-
-		}
-}
-
-void update_game_matrix(int modelMatrix[LED_DISPLAY_HEIGHT][LED_DISPLAY_WIDTH])
-{
-	int i,j;
-	for (i = 0; i < LED_DISPLAY_HEIGHT; ++i)
-	{
-		for (j = 0; j < LED_DISPLAY_WIDTH; ++j)
-		{
-			if(modelMatrix[i][j]!=0)
-			{
-				game_matrix[i][j] = dot_color;
-			}
-			else
-			{
-				game_matrix[i][j].red = 0;
-				game_matrix[i][j].green = 0;
-				game_matrix[i][j].blue = 0;
-			}
-		}
-	}
-
+	uint32_t retval = 0;
+	retval = retval | (color.g<<(8*2)) | (color.r << (8*1)) | (color.b << (8*0));
+	return retval;
 }
 
 /*	Interrupt CallBack Definition */
