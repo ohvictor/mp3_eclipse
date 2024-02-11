@@ -3,6 +3,9 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "board.h"
+#include "audioplayer.h"
+#include "mp3decoder.h"
 
 
 /*******************************************************************************
@@ -13,6 +16,7 @@
 
 static uint8_t volume_level = 15;
 static STATE *pState=NULL;
+static char* filepath;
 
 /********************
  * STATES DEFINITION
@@ -85,34 +89,62 @@ void FSM_setNewState(STATE *pNewState)
 
 void music_play()
 {
-  // Play from current spot in track
+	gpioWrite(PIN_LED_GREEN, LOW);
+	gpioWrite(PIN_LED_BLUE, HIGH);
+	gpioWrite(PIN_LED_RED, HIGH);
+
+	filepath = filesystem_get_path();
+
+    //int num = audioplayer_load_song(filepath);
+
+    //ID3Tag_t* tag = mp3_get_tag_data();
+
+    //num = audioplayer_play();
 
 }
 
 void music_stop()
 {
   // Cease playing, and return to beginning of current track
-
+	gpioWrite(PIN_LED_BLUE, HIGH);
+	gpioWrite(PIN_LED_RED, LOW);
+	gpioWrite(PIN_LED_GREEN, HIGH);
 }
 
 void music_pause()
 {
   // Cease playing, but remain in current position of current track
+	gpioWrite(PIN_LED_BLUE, LOW);
+	gpioWrite(PIN_LED_RED, HIGH);
+	gpioWrite(PIN_LED_GREEN, HIGH);
 
+	vu_screen_clean();
 }
 
 void music_next()
 {
   // Start from the beginning of the following track
+	gpioWrite(PIN_LED_BLUE, LOW);
+	gpioWrite(PIN_LED_RED, LOW);
+	gpioWrite(PIN_LED_GREEN, HIGH);
 
-  music_play();
+	vu_screen_clean();
+
+	filepath = filesystem_show_next();
+	//music_play();
 }
 
 void music_prev()
 {
   // Start from the beginning of the earlier track
+	gpioWrite(PIN_LED_BLUE, HIGH);
+	gpioWrite(PIN_LED_RED, HIGH);
+	gpioWrite(PIN_LED_GREEN, HIGH);
 
-  music_play();
+	vu_screen_clean();
+
+	filepath = filesystem_show_previous();
+  //music_play();
 }
 
 void volume_increase()

@@ -75,7 +75,8 @@ uint16_t mp3_get_next_frame(int16_t* outputBuffer);
 /**
  * @brief Get MP3 file tag data.
  */
-void mp3_get_tag_data(ID3Tag_t data);
+ID3Tag_t* mp3_get_tag_data();
+
 
 /**
  * @brief Check if file has ID3 tag.

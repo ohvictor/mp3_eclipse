@@ -12,11 +12,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include "DMA_DAC.h"
 #include "timer.h"
-#include "mp3decoder.h"
 #include "ff.h"
 #include "math.h"
+
+#include "mp3decoder.h"
+#include "DMA_DAC.h"
+#include "fftvumeter.h"
+#include "vumeter.h"
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -44,7 +48,7 @@ void timerMP3callback();
 
 static tim_id_t         timerMP3;
 static int16_t          MP3Buffers[2][OUTPUT_BUFFER_SIZE];
-static float            MP3FloatBuffers[2][OUTPUT_BUFFER_SIZE];
+static float32_t        MP3FloatBuffers[2][OUTPUT_BUFFER_SIZE];
 static int16_t*         pMP3Buffer;
 static int16_t*         pPrevMP3Buffer;
 static MP3FrameInfo     MP3frameInfo;
@@ -61,7 +65,7 @@ static audio_states_t   state = AUDIOPLAYER_NONE;
 /**
  * @brief Initializes the audio player module.
  */
-void audio_player_init(void)
+void audioplayer_init(void)
 {
     // Check if already initialized
     if (state == AUDIOPLAYER_INIT) {
@@ -70,6 +74,8 @@ void audio_player_init(void)
 
     // Initialize MP3 Decoder
     mp3_decoder_init();
+
+    fftvumeter_init();
 
     // Initialize DMA DAC
     DMA_DAC_init();
@@ -87,7 +93,7 @@ void audio_player_init(void)
  * @param filepath Path to the song file.
  * @return State of the audio player after loading the song.
  */
-uint16_t audio_player_load_song(const char* filepath)
+uint16_t audioplayer_load_song(const char* filepath)
 {
     if(mp3_load_song(filepath))
     {
@@ -105,7 +111,7 @@ uint16_t audio_player_load_song(const char* filepath)
  * @brief Starts playing the loaded song.
  * @return State of the audio player after starting to play the song.
  */
-uint16_t audio_player_play(void)
+uint16_t audioplayer_play(void)
 {
     pMP3Buffer = MP3Buffers[0];
 
@@ -117,12 +123,12 @@ uint16_t audio_player_play(void)
     else {
         // Convert buffer to floating point
         for (int i = 0; i < bufferRead; i++) {
-            MP3FloatBuffers[0][i] = (float) pMP3Buffer[i];
+            MP3FloatBuffers[0][i] = (float32_t) pMP3Buffer[i];
         }
 
         // Float to 12-bit conversion
         for (int i = 0; i < OUTPUT_BUFFER_SIZE; i++) {
-            float aux = MP3FloatBuffers[1][i] * 0x7FF / 0x7FFF;
+        	float32_t aux = MP3FloatBuffers[1][i] * 0x7FF / 0x7FFF;
             if (aux > (int16_t)0x7FF) {
                 aux = 0x7FF;
             } else if (aux < (int16_t)0xF800) {
@@ -131,8 +137,15 @@ uint16_t audio_player_play(void)
             ((uint16_t*)pMP3Buffer)[i] = (uint16_t)((int16_t)aux + (int16_t)0x800);
         }
 
+        fftvumeter_init();
+        if(fftvumeter_calculate_power(MP3FloatBuffers[1], 48000.0, 80, 10000))
+        {
+        	vu_set_power(fftvumeter_get_power());
+        }
+
         // Start DMA DAC
         DMA_DAC_PingPong((uint16_t*)MP3Buffers[0], (uint16_t*)MP3Buffers[1], OUTPUT_BUFFER_SIZE);
+
 
         // Start the MP3 timer
         timerStart(timerMP3, TIMER_MS2TICKS(5U), TIM_MODE_PERIODIC, timerMP3callback);
@@ -147,7 +160,7 @@ uint16_t audio_player_play(void)
  * @brief Stops the audio player.
  * @return True if successful, false otherwise.
  */
-bool audio_player_stop(void)
+bool audioplayer_stop(void)
 {
     // Stop the MP3 timer
     timerStop(timerMP3);
@@ -160,42 +173,71 @@ bool audio_player_stop(void)
     return state;
 }
 
-/*
-void mp3Handler_updateAll(void)
+
+
+/**
+ * @brief
+ */
+bool audioplayer_inc_volume(void)
 {
-	mp3Handler_updateAudioPlayerBackBuffer();
-	mp3Handler_showFFT();
+
 }
 
-
-void mp3Handler_IncVolume(void)
+/**
+ * @brief
+ */
+bool audioplayer_dec_volume(void)
 {
-	vol += (vol >= MAX_VOLUME)? 0 : 1;
-	vol2send = vol+40;
+
 }
 
-
-void mp3Handler_DecVolume(void)
+/**
+ * @brief
+ */
+uint16_t audioplayer_get_volume(void)
 {
-	vol -= (vol > 0) ? 1 : 0;
-	vol2send = vol + 40;
+
 }
 
-
-char mp3Handler_getVolume(void)
+/**
+ * @brief
+ */
+bool audioplayer_set_volume(uint16_t volume)
 {
-	return (char)vol;
+
 }
 
-
-void mp3Handler_setVolume(char value)
+/**
+ * @brief
+ */
+char* audioplayer_get_songname(void)
 {
-	if(vol <= 40 && vol >=0)
-	{
-		vol = (uint8_t)value;
-	}
+
 }
-*/
+
+/**
+ * @brief
+ */
+char* audioplayer_get_artist(void)
+{
+
+}
+
+/**
+ * @brief
+ */
+char* audioplayer_get_album(void)
+{
+
+}
+
+/**
+ * @brief
+ */
+char* audioplayer_get_year(void)
+{
+
+}
 
 /*******************************************************************************
  *******************************************************************************
@@ -208,7 +250,7 @@ void mp3Handler_setVolume(char value)
  */
 void timerMP3callback()
 {
-    pMP3Buffer = (int16_t*) DMA_DAC_PingPong_table();
+    //pMP3Buffer = (int16_t*) DMA_DAC_PingPong_table();
 
     if (pMP3Buffer != pPrevMP3Buffer) {
 
@@ -218,7 +260,7 @@ void timerMP3callback()
 
         if (buffer_read > 0) {
             for (int i = 0; i < buffer_read; i++) {
-                MP3FloatBuffers[0][i] = (float)pMP3Buffer[i];
+                MP3FloatBuffers[0][i] = (float32_t)pMP3Buffer[i];
             }
 
             // Float to 12-bit conversion
@@ -231,10 +273,16 @@ void timerMP3callback()
                 }
                 ((uint16_t*)pMP3Buffer)[i] = (uint16_t)((int16_t)aux + (int16_t)0x800);
             }
+
+            fftvumeter_init();
+            if(fftvumeter_calculate_power(MP3FloatBuffers[1], 48000.0, 80, 10000))
+            {
+            	vu_set_power(fftvumeter_get_power());
+            }
         }
         else {
             // Stop the audio player if no more frames
-            audio_player_stop();
+            audioplayer_stop();
         }
     }
 }

@@ -34,9 +34,13 @@ int main (void)
 
     int result = filesystem_init();
 
+    audioplayer_init();
+
     result = filesystem_map_files();
 
     int files = filesystem_get_files_count();
+
+    /*
 
     char * folder1 = filesystem_open_folder();
 
@@ -46,16 +50,16 @@ int main (void)
 
     char * path = filesystem_get_path();
 
-    audio_player_init();
+    audioplayer_init();
 
-    int num = audio_player_load_song(path);
+    int num = audioplayer_load_song(path);
 
-    ID3Tag_t tag;
+    ID3Tag_t* tag = mp3_get_tag_data();
 
-    mp3_get_tag_data(tag);
+    num = audioplayer_play();
 
-    num = audio_player_play();
+    */
 
-    //__FOREVER__
-     //   App_Run(); /* Program-specific loop  */
+    __FOREVER__
+       App_Run(); /* Program-specific loop  */
 }

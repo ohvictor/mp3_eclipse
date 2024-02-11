@@ -42,7 +42,12 @@
 #define PIN_PAUSE	PORTNUM2PIN(PB,3)	//PTB3
 #define	PIN_STOP	PORTNUM2PIN(PB,10)	//PTB10
 #define PIN_NEXT	PORTNUM2PIN(PC,11)	//PTC11
-#define PIN_PREV	PORTNUM2PIN(PC,10)	//PTC10
+#define PIN_PREV	PORTNUM2PIN(PB,11)	//PTC10
+
+// Test point
+#define TP				PORTNUM2PIN(PC,5) // PTC4
+#define TP2				PORTNUM2PIN(PC,7)
+
 
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS

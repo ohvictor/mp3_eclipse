@@ -60,6 +60,12 @@ void App_Init (void)
 	ctrl_set_prev_callback(mp3_prev);
 	control_init();
 
+
+	gpioMode(PIN_LED_GREEN, OUTPUT);
+	gpioMode(PIN_LED_BLUE, OUTPUT);
+	gpioMode(PIN_LED_RED, OUTPUT);
+
+
 	FSM_start();
 
 	vu_init();
@@ -68,7 +74,8 @@ void App_Init (void)
 	{
 		powers[i] = 0xff-i*32;
 	}
-	vu_update(powers);
+	vu_set_power(powers);
+	vu_update();
 
 	timerInit();
 	display_timer_id = timerGetId();
@@ -122,12 +129,15 @@ void mp3_prev(void)
 
 void display_callback(void)
 {
+	/*
 	int i;
 	for(i=0; i<8; i++)
 	{
 		powers[i] += 0x20;
 	}
-	vu_update(powers);
+	*/
+	//vu_update(powers);
+	vu_update();
 }
 
 

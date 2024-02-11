@@ -44,66 +44,77 @@ typedef enum
 /**
  * @brief Initializes the audio module.
  */
-void audio_player_init(void);
+void audioplayer_init(void);
 
 /**
  * @brief Initializes the audio module.
  */
-void audio_player_deinit(void);
+void audioplayer_deinit(void);
 
 /**
  * @brief           
  * @param filepath      Directory path for the audio files
  */
-uint16_t audio_player_load_song(const char* filepath);
+uint16_t audioplayer_load_song(const char* filepath);
 
 /**
  * @brief
  * @param
  */
-uint16_t audio_player_play(void);
+uint16_t audioplayer_play(void);
 
 /**
  * @brief
  * @param
  */
-bool audio_player_stop(void);
+bool audioplayer_stop(void);
 
 /**
  * @brief
  * @param
  */
-bool audio_player_update_buffer(void);
+bool audioplayer_update_buffer(void);
+
 
 /**
  * @brief
- * @param
  */
-bool audio_player_stop(void);
+bool audioplayer_inc_volume(void);
 
 /**
  * @brief
- * @param
  */
-bool audio_player_inc_volume(void);
+bool audioplayer_dec_volume(void);
+/**
+ * @brief
+ */
+uint16_t audioplayer_get_volume(void);
 
 /**
  * @brief
- * @param
  */
-bool audio_player_dec_volume(void);
+bool audioplayer_set_volume(uint16_t volume);
+
 
 /**
  * @brief
- * @param
  */
-uint16_t audio_player_get_volume(void);
+char* audioplayer_get_songname(void);
 
 /**
  * @brief
- * @param
  */
-bool audio_player_set_volume(uint16_t volume);
+char* audioplayer_get_artist(void);
+
+/**
+ * @brief
+ */
+char* audioplayer_get_album(void);
+
+/**
+ * @brief
+ */
+char* audioplayer_get_year(void);
 
 
 

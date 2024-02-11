@@ -35,7 +35,7 @@ void control_init()
 	gpioIRQ(PIN_NEXT, PORT_eInterruptFalling, ctrl_next_callback);
 
 	gpioMode(PIN_PREV, INPUT);
-	gpioIRQ(PIN_PREV, GPIO_IRQ_MODE_FALLING_EDGE, ctrl_prev_callback);
+	gpioIRQ(PIN_PREV, PORT_eInterruptFalling, ctrl_prev_callback);
 }
 
 

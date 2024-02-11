@@ -16,6 +16,7 @@ typedef struct
 
 static cell_t SW_matrix[LED_ROWS][LED_COLS];
 static MATRIX_BOARD_t DRV_matrix;
+uint8_t bands[F_BAND_N];
 
 void screen_update(void);
 
@@ -70,7 +71,15 @@ void vu_init()
     screen_update();
 }
 
-void vu_update(uint8_t bands[F_BAND_N])
+void vu_set_power(uint8_t* input)
+{
+	for(int i=0; i<F_BAND_N; i++)
+	{
+		bands[i] = input[i];
+	}
+}
+
+void vu_update(void)
 {
 	uint8_t i,j;
 	for(j=0; j<F_BAND_N; j++)
@@ -104,3 +113,18 @@ void screen_update(void)
 	}
 	LED_DISPLAY_updateMatrix(DRV_matrix);
 }
+
+
+void vu_screen_clean()
+{
+	for(int i=0; i<LED_ROWS; i++)
+	{
+		for(int j=0; j<LED_COLS; j++)
+		{
+			DRV_matrix.table[i][j].g = LEVEL_ON;
+		}
+	}
+	LED_DISPLAY_updateMatrix(DRV_matrix);
+
+}
+

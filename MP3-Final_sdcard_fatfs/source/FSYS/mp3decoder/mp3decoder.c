@@ -157,6 +157,7 @@ uint16_t mp3_get_next_frame(int16_t* outputBuffer)
     int16_t auxBuffer[2 * OUTPUT_BUFFER_SIZE];
     int error, offset;
     uint8_t* decodeBuffer;
+    context.mp3BytesRead = 0;
 
     bool needSync = false;
 
@@ -186,9 +187,11 @@ uint16_t mp3_get_next_frame(int16_t* outputBuffer)
                     f_lseek(&context.mp3FileHandler, f_tell(&context.mp3FileHandler) - context.mp3BytesLeft);
 
                     if (context.mp3FrameInfo.nChans == 2) {
-                        convert_stereo_to_mono(outputBuffer, auxBuffer);
+                        for (int i = 0; i < OUTPUT_BUFFER_SIZE; i++) 
+                        {
+                            outputBuffer[i] = (int16_t)(((int32_t)auxBuffer[2 * i] + (int32_t)auxBuffer[2 * i + 1]) / 2);
+                        }
                     }
-
                     return context.mp3FrameInfo.outputSamps / context.mp3FrameInfo.nChans;
 
                     break;
@@ -232,9 +235,9 @@ uint16_t mp3_get_next_frame(int16_t* outputBuffer)
 /**
  * @brief Get MP3 file tag data.
  */
-void mp3_get_tag_data(ID3Tag_t data)
+ID3Tag_t* mp3_get_tag_data()
 {
-    data = id3Tag; // Copy
+	return &id3Tag;
 }
 
 /**

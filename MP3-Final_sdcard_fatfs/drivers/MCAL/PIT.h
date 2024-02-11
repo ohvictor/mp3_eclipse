@@ -18,12 +18,12 @@
 
 #define PIT_TICK_TIME	20UL	// ns
 
-#define PIT_TICK2NS(x)	    ((x)*PIT_TICK_TIME)			// ns
-#define PIT_TICK2MS(x)	    ((x)*PIT_TICK_TIME/1000000UL)	// ms
+#define PIT_TICK2NS(x)	((x)*PIT_TICK_TIME)			// ns
+#define PIT_TICK2MS(x)	((x)*PIT_TICK_TIME/1000000UL)	// ms
 
-#define PIT_NS2TICK(x)	    (((x)/PIT_TICK_TIME)-1)
-#define PIT_US2TICK(x)	    (((x)*(1000UL/PIT_TICK_TIME))-1UL)
-#define PIT_MS2TICK(x)	    (((x)*(1000000UL/PIT_TICK_TIME))-1UL)
+#define PIT_NS2TICK(x)	(((x)/PIT_TICK_TIME)-1)
+#define PIT_US2TICK(x)	(((x)*(1000UL/PIT_TICK_TIME))-1UL)
+#define PIT_MS2TICK(x)	(((x)*(1000000UL/PIT_TICK_TIME))-1UL)
 
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS

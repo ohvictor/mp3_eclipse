@@ -7,8 +7,6 @@
 
 void PWM_ISR(void);
 
-uint16_t PWM_modulus = 63-1;
-uint16_t PWM_duty    = 30;//5000-1;
 
 /* FTM0 fault, overflow and channels interrupt handler*/
 __ISR__ FTM0_IRQHandler(void)
@@ -43,12 +41,6 @@ void FTM_Init (void)
 	FTM1->PWMLOAD = FTM_PWMLOAD_LDOK_MASK | 0x0F;
 	FTM2->PWMLOAD = FTM_PWMLOAD_LDOK_MASK | 0x0F;
 	FTM3->PWMLOAD = FTM_PWMLOAD_LDOK_MASK | 0x0F;
-
-	/*
-	 * TO DO
-	 */
-
-	//PWM_Init();
 }
 
 
