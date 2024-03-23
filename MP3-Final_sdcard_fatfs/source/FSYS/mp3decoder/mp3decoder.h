@@ -26,7 +26,7 @@
 
 #define INPUT_BUFFER_SIZE			MAINBUF_SIZE
 
-#define MP3_SAMPLE_RATE				48000
+#define MP3_SAMPLE_RATE				24000
 
 #define ID3_MAX_NUM_CHARS          50
 

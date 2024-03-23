@@ -93,13 +93,15 @@ void music_play()
 	gpioWrite(PIN_LED_BLUE, HIGH);
 	gpioWrite(PIN_LED_RED, HIGH);
 
+	char* next = filesystem_show_next();
+
 	filepath = filesystem_get_path();
 
-    //int num = audioplayer_load_song(filepath);
+    int num = audioplayer_load_song(filepath);
 
-    //ID3Tag_t* tag = mp3_get_tag_data();
+    ID3Tag_t* tag = mp3_get_tag_data();
 
-    //num = audioplayer_play();
+    num = audioplayer_play();
 
 }
 
