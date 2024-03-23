@@ -1,0 +1,4 @@
+../drivers/HAL/DRV_Encoder.c:43:6:initEncoder	8	static
+../drivers/HAL/DRV_Encoder.c:54:6:encoderGetStatus	4	static
+../drivers/HAL/DRV_Encoder.c:64:17:encoderGetEvent	4	static
+../drivers/HAL/DRV_Encoder.c:74:13:encoder_callback	8	static

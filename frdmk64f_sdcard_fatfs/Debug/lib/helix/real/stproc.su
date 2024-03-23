@@ -1,0 +1,5 @@
+../lib/helix/real/assembly.h:323:23:MULSHIFT32	24	static
+../lib/helix/real/assembly.h:330:21:FASTABS	24	static
+../lib/helix/real/stproc.c:64:6:xmp3fixpt_MidSideProc	48	static
+../lib/helix/real/stproc.c:106:6:xmp3fixpt_IntensityProcMPEG1	120	static
+../lib/helix/real/stproc.c:212:6:xmp3fixpt_IntensityProcMPEG2	208	static

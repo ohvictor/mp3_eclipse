@@ -1,0 +1,16 @@
+../lib/mp3decoder/mp3decoder.c:160:6:MP3DecoderInit	8	static
+../lib/mp3decoder/mp3decoder.c:175:6:MP3LoadFile	24	static
+../lib/mp3decoder/mp3decoder.c:216:6:MP3GetLastFrameData	24	static
+../lib/mp3decoder/mp3decoder.c:228:6:MP3GetNextFrameData	56	static
+../lib/mp3decoder/mp3decoder.c:245:21:MP3GetDecodedFrame	24	static
+../lib/mp3decoder/mp3decoder.c:250:21:MP3GetDecodedFrameRec	88	static
+../lib/mp3decoder/mp3decoder.c:414:6:MP3GetTagData	24	static
+../lib/mp3decoder/mp3decoder.c:435:6:flushFileToBuffer	16	static
+../lib/mp3decoder/mp3decoder.c:458:6:copyFrameInfo	16	static
+../lib/mp3decoder/mp3decoder.c:467:6:readID3Tag	16	static
+../lib/mp3decoder/mp3decoder.c:509:6:openFile	24	static
+../lib/mp3decoder/mp3decoder.c:526:6:closeFile	8	static
+../lib/mp3decoder/mp3decoder.c:535:8:currentFileSize	16	static
+../lib/mp3decoder/mp3decoder.c:552:6:fileRewind	8	static
+../lib/mp3decoder/mp3decoder.c:561:6:fileSeek	16	static
+../lib/mp3decoder/mp3decoder.c:570:8:readFile	32	static

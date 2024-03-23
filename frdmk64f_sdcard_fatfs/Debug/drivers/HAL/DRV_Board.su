@@ -1,0 +1,5 @@
+../drivers/HAL/DRV_Board.c:58:6:initBoard	8	static
+../drivers/HAL/DRV_Board.c:75:6:setLED	16	static
+../drivers/HAL/DRV_Board.c:79:6:clearLED	16	static
+../drivers/HAL/DRV_Board.c:83:6:toggleLED	16	static
+../drivers/HAL/DRV_Board.c:87:6:getSW	16	static

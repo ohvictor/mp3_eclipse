@@ -1,0 +1,6 @@
+../drivers/HAL/DRV_SD.c:92:10:sdcardInit	8	static
+../drivers/HAL/DRV_SD.c:96:10:sdcardMount	8	static
+../drivers/HAL/DRV_SD.c:117:10:sdcardPrintFiles	16	static
+../drivers/HAL/DRV_SD.c:153:6:sdcardIsInserted	4	static
+../drivers/HAL/DRV_SD.c:163:13:SDCARD_DetectCallBack	16	static
+../drivers/HAL/DRV_SD.c:168:17:sdcard_detect_insert	8	static

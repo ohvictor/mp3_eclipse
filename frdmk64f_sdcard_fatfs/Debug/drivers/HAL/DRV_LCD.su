@@ -1,0 +1,9 @@
+../drivers/HAL/DRV_LCD.c:78:6:lcd_init	16	static
+../drivers/HAL/DRV_LCD.c:99:6:lcd_is_busy	4	static
+../drivers/HAL/DRV_LCD.c:103:6:lcd_configure	16	static
+../drivers/HAL/DRV_LCD.c:137:6:lcd_write_ins	16	static
+../drivers/HAL/DRV_LCD.c:144:6:lcd_write_data	16	static
+../drivers/HAL/DRV_LCD.c:158:13:lcd_write_gpio	24	static
+../drivers/HAL/DRV_LCD.c:164:13:lcd_write	16	static
+../drivers/HAL/DRV_LCD.c:175:13:lcd_write_fsm_callback	8	static
+../drivers/HAL/DRV_LCD.c:204:6:lcd_timer_delay	16	static

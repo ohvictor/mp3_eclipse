@@ -1,0 +1,3 @@
+D:\00-ITBA\LabdeMicros\FINAL\Eclipse\mp3_eclipse\frdmk64f_sdcard_fatfs\drivers\FSL/fsl_sysmpu.h:268:20:SYSMPU_Enable	16	static
+../source/app_test.c:43:5:App_Init	8	static
+../source/app_test.c:65:5:App_Run	8	static

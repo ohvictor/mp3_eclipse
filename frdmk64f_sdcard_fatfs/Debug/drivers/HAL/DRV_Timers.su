@@ -1,0 +1,7 @@
+../drivers/HAL/DRV_Timers.c:75:6:initTimers	8	static
+../drivers/HAL/DRV_Timers.c:87:10:timerGetId	4	static
+../drivers/HAL/DRV_Timers.c:102:6:timerStart	24	static
+../drivers/HAL/DRV_Timers.c:124:6:timerStop	16	static
+../drivers/HAL/DRV_Timers.c:134:6:timerExpired	16	static
+../drivers/HAL/DRV_Timers.c:140:6:timerDelay	16	static
+../drivers/HAL/DRV_Timers.c:156:13:timer_isr	16	static

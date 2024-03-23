@@ -1,0 +1,14 @@
+../source/audio_manager/audio_manager.c:64:6:init_audio_manager	8	static
+../source/audio_manager/audio_manager.c:71:6:audio_load_song	16	static
+../source/audio_manager/audio_manager.c:76:6:audio_get_tag_data	16	static
+../source/audio_manager/audio_manager.c:80:6:audio_print_tag_data	184	static
+../source/audio_manager/audio_manager.c:91:6:audio_start_playing	8	static
+../source/audio_manager/audio_manager.c:97:6:audio_decode_loop	8	static
+../source/audio_manager/audio_manager.c:105:6:audio_stop_playing	8	static
+../source/audio_manager/audio_manager.c:110:6:audio_is_playing	4	static
+../source/audio_manager/audio_manager.c:114:9:increase_volume	4	static
+../source/audio_manager/audio_manager.c:121:9:decrease_volume	4	static
+../source/audio_manager/audio_manager.c:128:6:audio_play_pause	8	static
+../source/audio_manager/audio_manager.c:137:6:audio_set_eq	16	static
+../source/audio_manager/audio_manager.c:147:13:audio_raise_decode_flag	4	static
+../source/audio_manager/audio_manager.c:151:13:audio_decode_next_frame	24	static

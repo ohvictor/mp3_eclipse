@@ -1,0 +1,5 @@
+../source/equalizer/EQ_FIR_Q15.c:57:6:eq_init	24	static
+../source/equalizer/EQ_FIR_Q15.c:75:6:eq_filter_frame	40	static
+../source/equalizer/EQ_FIR_Q15.c:106:6:eq_filter_sample	16	static
+../source/equalizer/EQ_FIR_Q15.c:123:6:eq_set_frame_size	16	static
+../source/equalizer/EQ_FIR_Q15.c:128:6:eq_set_eq	16	static

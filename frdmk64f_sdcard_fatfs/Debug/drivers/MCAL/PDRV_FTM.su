@@ -1,0 +1,9 @@
+D:\00-ITBA\LabdeMicros\FINAL\Eclipse\mp3_eclipse\frdmk64f_sdcard_fatfs\CMSIS/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static
+../drivers/MCAL/PDRV_FTM.c:185:6:FTM_init	32	static
+../drivers/MCAL/PDRV_FTM.c:352:6:FTM_start	16	static
+../drivers/MCAL/PDRV_FTM.c:357:6:FTM_stop	16	static
+../drivers/MCAL/PDRV_FTM.c:362:6:FTM_resetCounter	16	static
+../drivers/MCAL/PDRV_FTM.c:374:10:FTM_getCounter	16	static
+../drivers/MCAL/PDRV_FTM.c:379:6:FTM_modifyDC	24	static
+../drivers/MCAL/PDRV_FTM.c:395:6:FTM_modifyModulo	16	static
+../drivers/MCAL/PDRV_FTM.c:410:8:FTM_getCounterPointer	16	static

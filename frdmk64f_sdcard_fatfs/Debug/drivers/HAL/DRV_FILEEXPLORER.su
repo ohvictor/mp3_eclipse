@@ -1,0 +1,12 @@
+../drivers/HAL/DRV_FILEEXPLORER.c:83:10:fileExplorerInit	16	static
+../drivers/HAL/DRV_FILEEXPLORER.c:131:10:getCurrFile	4	static
+../drivers/HAL/DRV_FILEEXPLORER.c:135:10:getNextFile	4	static
+../drivers/HAL/DRV_FILEEXPLORER.c:145:10:getPrevFile	4	static
+../drivers/HAL/DRV_FILEEXPLORER.c:157:10:accessFolder	8	static
+../drivers/HAL/DRV_FILEEXPLORER.c:168:10:goBack	8	static
+../drivers/HAL/DRV_FILEEXPLORER.c:177:12:getMetadata	16	static
+../drivers/HAL/DRV_FILEEXPLORER.c:182:6:getPath	16	static
+../drivers/HAL/DRV_FILEEXPLORER.c:187:6:testFileExplorer	600	static
+../drivers/HAL/DRV_FILEEXPLORER.c:268:13:convertFilinfoToMetadata	8	static
+../drivers/HAL/DRV_FILEEXPLORER.c:280:13:getCurrentMetadataAsString	56	static
+../drivers/HAL/DRV_FILEEXPLORER.c:287:13:remove_last_folder	24	static

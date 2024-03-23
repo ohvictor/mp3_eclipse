@@ -1,0 +1,2 @@
+../lib/helix/real/assembly.h:341:21:CLZ	24	static
+../lib/helix/real/dequant.c:73:5:xmp3fixpt_Dequantize	104	static

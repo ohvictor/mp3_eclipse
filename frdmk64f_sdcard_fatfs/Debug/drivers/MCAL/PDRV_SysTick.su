@@ -1,0 +1,2 @@
+../drivers/MCAL/PDRV_SysTick.c:69:6:SysTick_Init	16	static
+../drivers/MCAL/PDRV_SysTick.c:89:9:SysTick_Handler	16	static

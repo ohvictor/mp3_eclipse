@@ -1,0 +1,2 @@
+../lib/helix/real/assembly.h:323:23:MULSHIFT32	24	static
+../lib/helix/real/dct32.c:142:6:xmp3fixpt_FDCT32	128	static

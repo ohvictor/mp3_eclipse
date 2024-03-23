@@ -1,0 +1,5 @@
+../source/spectrum_display/spectrum_display.c:28:6:spectrum_display_init	8	static
+../source/spectrum_display/spectrum_display.c:34:5:spectrum_display_fft	40	static
+../source/spectrum_display/spectrum_display.c:69:6:spectrum_display_write	40	static
+../source/spectrum_display/spectrum_display.c:90:6:spectrum_display_clear	24	static
+../source/spectrum_display/spectrum_display.c:103:6:spectrum_display_update	8	static

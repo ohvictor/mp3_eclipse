@@ -1,0 +1,5 @@
+D:\00-ITBA\LabdeMicros\FINAL\Eclipse\mp3_eclipse\frdmk64f_sdcard_fatfs\CMSIS/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static
+../drivers/MCAL/PDRV_SPI.c:191:6:SPI_Init	24	static
+../drivers/MCAL/PDRV_SPI.c:312:10:SPI_Read	16	static
+../drivers/MCAL/PDRV_SPI.c:318:6:SPI_Write	16	static
+../drivers/MCAL/PDRV_SPI.c:324:6:SPI_TransferComplete	16	static

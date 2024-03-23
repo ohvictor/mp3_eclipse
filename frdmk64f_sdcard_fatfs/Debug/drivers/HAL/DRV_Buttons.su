@@ -1,0 +1,9 @@
+../drivers/HAL/DRV_Buttons.c:116:6:buttonsInit	8	static
+../drivers/HAL/DRV_Buttons.c:141:15:getButton1Status	8	static
+../drivers/HAL/DRV_Buttons.c:145:15:getButton2Status	8	static
+../drivers/HAL/DRV_Buttons.c:149:15:getButtonEncoderStatus	8	static
+../drivers/HAL/DRV_Buttons.c:160:22:getButtonStatus	16	static
+../drivers/HAL/DRV_Buttons.c:170:13:button1Handler	8	static
+../drivers/HAL/DRV_Buttons.c:174:13:button2Handler	8	static
+../drivers/HAL/DRV_Buttons.c:178:13:buttonEncoderHandler	8	static
+../drivers/HAL/DRV_Buttons.c:182:13:genericButtonHandler	16	static

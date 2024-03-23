@@ -1,0 +1,3 @@
+../source/spectrum_display/rfft.c:10:6:rfft_init	8	static
+../source/spectrum_display/rfft.c:16:5:rfft	16	static
+../source/spectrum_display/rfft.c:22:5:rfft_mag	32	static

@@ -1,0 +1,5 @@
+../lib/helix/real/assembly.h:384:24:MADD64	32	static
+../lib/helix/real/assembly.h:393:24:SAR64	32	static
+../lib/helix/real/polyphase.c:59:23:ClipToShort	24	static
+../lib/helix/real/polyphase.c:112:6:xmp3fixpt_PolyphaseMono	88	static
+../lib/helix/real/polyphase.c:225:6:xmp3fixpt_PolyphaseStereo	104	static

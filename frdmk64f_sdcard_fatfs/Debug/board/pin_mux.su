@@ -1,0 +1,4 @@
+D:\00-ITBA\LabdeMicros\FINAL\Eclipse\mp3_eclipse\frdmk64f_sdcard_fatfs\drivers\FSL/fsl_clock.h:668:20:CLOCK_EnableClock	24	static
+D:\00-ITBA\LabdeMicros\FINAL\Eclipse\mp3_eclipse\frdmk64f_sdcard_fatfs\drivers\FSL/fsl_port.h:271:20:PORT_SetPinConfig	32	static
+D:\00-ITBA\LabdeMicros\FINAL\Eclipse\mp3_eclipse\frdmk64f_sdcard_fatfs\drivers\FSL/fsl_port.h:374:20:PORT_SetPinMux	24	static
+../board/pin_mux.c:68:6:BOARD_InitPins	40	static

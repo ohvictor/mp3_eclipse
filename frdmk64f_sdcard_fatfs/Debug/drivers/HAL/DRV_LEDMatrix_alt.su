@@ -1,0 +1,9 @@
+../drivers/HAL/DRV_LEDMatrix_alt.c:96:6:LEDMatrix_init	32	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:133:6:LEDMatrix_updateLED	16	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:138:6:LEDMatrix_updateMatrix	8	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:142:6:LEDMatrix_setBrightness	16	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:147:7:LEDMatrix_getBrightness	4	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:158:13:LEDMatrix_RGB2PWM	16	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:191:13:LEDMatrix_reset	8	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:196:13:LEDMatrix_restart	8	static
+../drivers/HAL/DRV_LEDMatrix_alt.c:202:13:copyMatrix	24	static

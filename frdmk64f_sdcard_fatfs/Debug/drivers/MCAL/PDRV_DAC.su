@@ -1,0 +1,4 @@
+../drivers/MCAL/PDRV_DAC.c:45:6:initDAC	4	static
+../drivers/MCAL/PDRV_DAC.c:66:6:dacEnableDMA	4	static
+../drivers/MCAL/PDRV_DAC.c:70:6:dacWrite	16	static
+../drivers/MCAL/PDRV_DAC.c:76:6:dacSetAmplitude	16	static
