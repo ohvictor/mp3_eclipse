@@ -30,6 +30,7 @@
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
+#include <arm_math.h>
 
 /*******************************************************************************
  * Variables
@@ -51,7 +52,7 @@ int App_Init(){
     initTimers();
 
     audioControllerInit();
-    
+
     //gpioMode(PORTNUM2PIN(PB, 20), OUTPUT);
     //gpioMode(PORTNUM2PIN(PB, 18), OUTPUT);
     //gpioMode(PORTNUM2PIN(PD, 2), OUTPUT);
